@@ -1,2 +1,2 @@
 # GetDFPData
-Repositoty for package GetDFPData
+Repository for package GetDFPData
