@@ -2,7 +2,7 @@
 % Please edit documentation in R/gdfpd_GetDFPData.R
 \name{gdfpd.GetDFPData}
 \alias{gdfpd.GetDFPData}
-\title{Downloads and reads financial reports from B3's DFP system}
+\title{Downloads and reads financial reports from B3's DFP/FRE/FCA system}
 \usage{
 gdfpd.GetDFPData(name.companies, first.date = Sys.Date() - 12 * 30,
   last.date = Sys.Date(), type.info = "individual",
@@ -30,7 +30,7 @@ When using 'IPCA', the base date is set as the last date found in the DFP datase
 
 \item{do.cache}{Logical for controlling to whether to use a cache system or not. Default = TRUE}
 
-\item{cache.folder}{Folder where to cache all processed information. Default = file.path(getwd(),'DFP Cache Folder')}
+\item{cache.folder}{Folder to cache (save) all processed information. Default = file.path(getwd(),'DFP Cache Folder')}
 
 \item{max.dl.tries}{Maximum number of attempts for dowloading files}
 }
@@ -38,7 +38,10 @@ When using 'IPCA', the base date is set as the last date found in the DFP datase
 A tibble object with all gathered financial statements, with each company as a row
 }
 \description{
-Annual financial reports are downloaded from B3 for a combination of companies and time period.
+Annual data for financial reports and corporate events are downloaded from B3 for a combination of companies and time period.
+This function gathers data into a single tibble object and organizes it in a tabular/long format.
+}
+\details{
 The easiest way to get started with gdfpd.GetDFPData is looking for the official name of traded companies using function gdfpd.search.company('nametolookfor').
 Alternatively, you can use function gdfpd.get.info.companies('companies') to import a dataframe with information for all available companies and time periods.
 }

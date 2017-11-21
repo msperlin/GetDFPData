@@ -1,6 +1,8 @@
-#' Downloads and reads financial reports from B3's DFP system
+#' Downloads and reads financial reports from B3's DFP/FRE/FCA system
 #'
-#' Annual financial reports are downloaded from B3 for a combination of companies and time period.
+#' Annual data for financial reports and corporate events are downloaded from B3 for a combination of companies and time period.
+#' This function gathers data into a single tibble object and organizes it in a tabular/long format.
+#'
 #' The easiest way to get started with gdfpd.GetDFPData is looking for the official name of traded companies using function gdfpd.search.company('nametolookfor').
 #' Alternatively, you can use function gdfpd.get.info.companies('companies') to import a dataframe with information for all available companies and time periods.
 #'
@@ -16,7 +18,7 @@
 #' @param max.levels Sets the maximum number of levels of accounting items in financial reports (default = 3)
 #' @param folder.out Folder where to download and manipulate the zip files. Default = tempdir()
 #' @param do.cache Logical for controlling to whether to use a cache system or not. Default = TRUE
-#' @param cache.folder Folder where to cache all processed information. Default = file.path(getwd(),'DFP Cache Folder')
+#' @param cache.folder Folder to cache (save) all processed information. Default = file.path(getwd(),'DFP Cache Folder')
 #' @param max.dl.tries Maximum number of attempts for dowloading files
 #'
 #' @return A tibble object with all gathered financial statements, with each company as a row

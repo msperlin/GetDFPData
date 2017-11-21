@@ -9,7 +9,7 @@ gdfpd.search.company(char.to.search, cache.folder = "DFP Cache Folder")
 \arguments{
 \item{char.to.search}{Character for partial matching}
 
-\item{cache.folder}{Folder where to cache all processed information. Default = file.path(getwd(),'DFP Cache Folder')}
+\item{cache.folder}{Folder to cache (save) all processed information. Default = file.path(getwd(),'DFP Cache Folder')}
 }
 \value{
 Names of found companies

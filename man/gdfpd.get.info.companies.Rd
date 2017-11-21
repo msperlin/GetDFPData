@@ -11,7 +11,7 @@ gdfpd.get.info.companies(type.data = "companies_files",
 \item{type.data}{A string that sets the type of information to be returned ('companies' or 'companies_files').
 If 'companies', it will return a dataframe with several information about companies, but without download links.}
 
-\item{cache.folder}{Folder where to cache all processed information. Default = file.path(getwd(),'DFP Cache Folder')}
+\item{cache.folder}{Folder to cache (save) all processed information. Default = file.path(getwd(),'DFP Cache Folder')}
 }
 \value{
 A dataframe with several information about Bovespa companies
