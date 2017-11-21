@@ -1,0 +1,166 @@
+---
+title: "Using GetDFPData to obtain annual financial reports from B3"
+author: "Marcelo Perlin"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using GetDFPData to obtain financial reports from B3}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+Financial statements of companies traded at B3 (formerly Bovespa), the Brazilian stock exchange, are available in its [website](http://www.bmfbovespa.com.br/). Accessing the data for a single company is straightforward. In the website one can find a simple interface for accessing this dataset. An example is given [here](https://www.rad.cvm.gov.br/ENETCONSULTA/frmGerenciaPaginaFRE.aspx?NumeroSequencialDocumento=67775&CodigoTipoInstituicao=2). However, gathering and organizing the data for a large scale research, with many companies and many dates, is painful. Financial reports must be downloaded or copied individually and later aggregated. Changes in the accounting format thoughout time can make this process slow, unreliable and irreproducible.
+
+Package `GetDFPData` provides a R interface to all annual financial statements available in the website and more. It not only downloads the data but also organizes it in a tabular format and allows the use of inflation indexes. Users can select companies and a time period to download all available data. Several information about current companies, such as sector and available quarters are also at reach. The main purpose of the package is to make it easy to access financial statements in large scale research, facilitating the reproducibility of corporate finance studies with B3 data.
+
+
+# Installation
+  
+The package is available in CRAN (release version) and in Github (development version). You can install any of those with the following code:
+  
+```{r, eval=FALSE}
+# Release version in CRAN
+install.packages('GetDFPData') # not in CRAN yet
+
+# Development version in Github
+devtools::install_github('msperlin/GetDFPData')
+```
+
+
+# How to use `GetDFPData`
+
+The starting point of `GetDFPData` is to find the official names of companies in Bovespa. Function `gdfpd.search.company` serves this purpose. Given a string (text), it will search for a partial matches in companies names. As an example, let's find the _official_ name of Petrobras, one of the largest companies in Brazil:
+
+```{r}
+library(GetDFPData)
+library(tibble)
+
+gdfpd.search.company('petrobras',cache.folder = tempdir())
+
+```
+
+Its official name in Bovespa records is `PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS`. Data for quarterly and annual statements are available from 1998 to 2017. The situation of the company, active or canceled, is also given. This helps verifying the availability of data.
+
+The content of all available financial statements can be accessed with function `gdfpd.get.info.companies`. It will read and parse a .csv file from my [github repository](https://github.com/msperlin/GetDFPData_auxiliary). This will be periodically updated for new information. Let's try it out:
+
+```{r}
+df.info <- gdfpd.get.info.companies(type.data = 'companies', cache.folder = tempdir())
+
+glimpse(df.info)
+```
+
+This file includes several information that are gathered from Bovespa: names of companies, official numeric ids, listing segment, sectors, traded tickers and, most importantly, the available dates. The resulting dataframe can be used to filter and gather information for large scale research such as downloading financial data for a specific sector.
+
+
+## Downloading financial information for ONE company
+
+All you need to download financial data with `GetDFPData` are the official names of companies, which can be found with `gdfpd.search.company`, the desired starting and ending dates and the type of financial information (individual or consolidated). Let's try it for PETROBRAS:
+
+```{r}
+name.companies <- 'PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS'
+first.date <- '2004-01-01'
+last.date  <- '2006-01-01'
+type.statements <- 'individual'
+
+df.reports <- gdfpd.GetDFPData(name.companies = name.companies, 
+                               first.date = first.date,
+                               last.date = last.date,
+                               type.info = type.statements, 
+                               cache.folder = tempdir())
+```
+
+The resulting object is a `tibble`, a data.frame type of object that allows for list columns. Let's have a look in its content:
+
+```{r}
+glimpse(df.reports)
+```
+
+Object `df.reports` only has one row since we only asked for data of one company. The number of rows increases with the number of companies, as we will soon learn with the next example. All financial statements for the different years are available within `df.reports`. For example, the income statements for all desired years of PETROBRAS are:
+
+```{r}
+df.income.long <- df.reports$fr.income[[1]]
+
+glimpse(df.income.long)
+```
+
+The resulting dataframe is in the long format, ready for processing. In the long format, financial statements of different quarters are stacked. In the wide format, we have the year as columns of the table. 
+
+If you want the wide format, which is the most common way that financial reports are presented, you can use function `gDFPd.convert.to.wide`. See an example next:
+
+```{r}
+df.income.wide <- gdfpd.convert.to.wide(df.income.long)
+
+knitr::kable(df.income.wide )
+```
+
+
+## Downloading financial information for SEVERAL companies
+
+If you are doing serious research, it is likely that you need financial statements for more than one company.  Package `GetDFPData` is specially designed for handling large scale download of data. Let's build a case with two selected companies:
+
+```{r}
+my.companies <- c('PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS',
+                  'BANCO DO ESTADO DO RIO GRANDE DO SUL SA')
+
+first.date <- '2005-01-01'
+last.date  <- '2009-01-01'
+type.statements <- 'individual'
+
+df.reports <- gdfpd.GetDFPData(name.companies = my.companies, 
+                               first.date = first.date,
+                               last.date = last.date,
+                               type.info = type.statements,
+                               cache.folder = tempdir())
+```
+
+And now we can check the resulting `tibble`:
+
+```{r}
+glimpse(df.reports)
+```
+
+Every row of `df.reports` will provide information for one company. Metadata about the corresponding dataframes such as min/max dates is available in the first columns. Keeping a tabular structure facilitates the organization and future processing of all financial data. We can use tibble `df.reports` for creating other dataframes in the long format containing data for all companies. See next, where we create dataframes with the assets and liabilities of all companies:
+
+```{r}
+df.assets <- do.call(what = rbind, args = df.reports$fr.assets)
+df.liabilities <- do.call(what = rbind, args = df.reports$fr.liabilities)
+
+df.assets.liabilities <- rbind(df.assets, df.liabilities)
+```
+
+As an example, let's use the resulting dataframe for calculating and analyzing a simple liquidity index of a company, the total of current (liquid) assets (_Ativo circulante_) divided by the total of current short term liabilities (_Passivo Circulante_), over time.
+
+```{r}
+library(dplyr)
+
+my.tab <- df.assets.liabilities %>%
+  group_by(company.name, ref.date) %>%
+  summarise(Liq.Index = acc.value[acc.number == '1.01']/ acc.value[acc.number == '2.01'])
+
+my.tab
+```
+
+Now we can visualize the information using `ggplot2`:
+
+```{r}
+library(ggplot2)
+
+p <- ggplot(my.tab, aes(x = ref.date, y = Liq.Index, fill = company.name)) +
+  geom_col(position = 'dodge' )
+print(p)
+```
+
+
+## Exporting financial data
+
+The package includes function `gdfpd.export.DFP.data` for exporting the financial data to an Excel or zipped csv files. See next:
+
+```{r, eval=FALSE}
+my.basename <- 'MyExcelData'
+my.format <- 'csv' # only supported so far
+gdfpd.export.DFP.data(df.reports = df.reports, 
+                      base.file.name = my.basename,
+                      type.export = my.format)
+```
+
+The resulting Excel file contains all data available in `df.reports`.

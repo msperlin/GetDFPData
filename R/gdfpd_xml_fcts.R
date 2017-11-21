@@ -1,0 +1,333 @@
+#' Reads XML data for compensation
+#'
+#' @param x A list with compensation data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.compensation <- function(x) {
+
+  df.out <- data.frame(level.remuneration = switch(x$CodigoOrgaoAdministrador,
+                                                   '1' = 'Management Council',
+                                                   '2' = 'Statutory Directors',
+                                                   '3' = 'Fiscal Council'),
+                       qtd.members = as.numeric(x$QuantidadeMembros),
+                       qtd.remunerated.members = switch(as.character(is.null(x$QtdMembrosRemunerados)),
+                                                        'TRUE' = NA,
+                                                        'FALSE' = as.numeric(x$QtdMembrosRemunerados)),
+                       total.value.remuneration = as.numeric(x$ValorTotalRemuneracao),
+                       fixed.salary = as.numeric(x$ValorFixoSalario),
+                       fixed.benefits = as.numeric(x$ValorFixoBeneficios),
+                       fixed.participations = as.numeric(x$ValorFixoParticipacoesComites),
+                       fixed.others = as.numeric(x$ValorFixoOutros),
+                       variable.bonus = as.numeric(x$ValorVariavelBonus),
+                       variable.results.participation = as.numeric(x$ValorVariavelParticipacaoResultados),
+                       variable.meetings.participation = as.numeric(x$ValorVariavelParticipacoesReunioes),
+                       variable.commissions.participation = as.numeric(x$ValorVariavelComissoes),
+                       variable.others = as.numeric(x$ValorVariavelOutros),
+                       post.job.compensation = as.numeric(x$ValorBeneficiosPosEmprego),
+                       ceasing.job.compensation = as.numeric(x$ValorBeneficiosCessacaoCargo),
+                       stocks.options.benefits = as.numeric(x$ValorBeneficiosBaseadaAcoes),
+                       stringsAsFactors = FALSE)
+
+
+
+  return(df.out)
+}
+
+#' Reads XML data for compensation summary data
+#'
+#' @param x A list with compensation summary data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.compensation.summary <- function(x) {
+
+  if (is.null(x)) return(data.frame())
+
+  df.out <- data.frame(level.remuneration = switch(x$CodigoOrgaoAdministrador,
+                                                   '1' = 'Management Council',
+                                                   '2' = 'Statutory Directors',
+                                                   '3' = 'Fiscal Council'),
+                       qtd.members = as.numeric(x$QuantidadeMembros),
+                       qtd.remunerated.members = switch(as.character(is.null(x$QtdMembrosRemunerados)),
+                                                        'TRUE' = NA,
+                                                        'FALSE' = as.numeric(x$QtdMembrosRemunerados)),
+                       max.remuneration = as.numeric(x$ValorMaiorRemuneracao),
+                       mean.remuneration = as.numeric(x$ValorMedioRemuneracao),
+                       min.remuneration = as.numeric(x$ValorMenorRemuneracao),
+                       observations = fix.fct(x$Observacao),
+                       stringsAsFactors = FALSE)
+
+
+
+  return(df.out)
+}
+
+
+#' Reads XML data for capita
+#'
+#' @param x A list with capital summary data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.capital <- function(x) {
+  df.out <- data.frame(date.increase.capital = as.Date(x$DataDeliberacao),
+                       name.authorizing.department = x$NomeOrgaoDeliberacaoAcrescimo,
+                       value.increase.capital = as.numeric(x$ValorTotalEmissao),
+                       type.increase.capital = as.numeric(x$CodigoTipoSubscricao),
+                       qtd.new.ordinary.shares = as.numeric(x$QuantidadeAcaoOrdinaria),
+                       qtd.new.preferred.shares = as.numeric(x$QuantidadeAcaoPreferencial),
+                       stringsAsFactors = FALSE)
+
+  return(df.out)
+}
+
+#' Reads XML data for stock value
+#'
+#' @param x A list with stock value data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.stock.values <- function(x) {
+
+  if (is.null(x$CotacaoMedia)) {
+
+    my.avg.price <- mean(c(as.numeric(x$MaiorCotacao),
+                           as.numeric(x$MenorCotacao)))
+    flag.missing.avg.price <- TRUE
+
+  } else {
+    if (as.numeric(x$CotacaoMedia) == 0) {
+      my.avg.price <- mean(c(as.numeric(x$MaiorCotacao),
+                             as.numeric(x$MenorCotacao)))
+      flag.missing.avg.price <- TRUE
+    } else {
+      my.avg.price <- as.numeric(x$CotacaoMedia)
+      flag.missing.avg.price <- FALSE
+    }
+  }
+
+
+  my.df <- data.frame(stock.type = switch(x$EspecieAcao,
+                                          '0' = 'ON',
+                                          '1' = 'ON',
+                                          '2' = 'PN'),
+                      stock.class = x$ClasseAcaoPN,
+                      max.price = as.numeric(x$MaiorCotacao),
+                      min.price = as.numeric(x$MenorCotacao),
+                      avg.price = my.avg.price,
+                      flag.missing.avg.price = flag.missing.avg.price,
+                      stringsAsFactors = F )
+
+  return(my.df)
+}
+
+
+#' Fix NULL values in dataframe
+#'
+#' @param x Am object, possibly NULL
+#'
+#' @return A single object
+#' @export
+#'
+#' @examples
+#'
+#' x <- NULL
+#' x2 <- fix.fct(x)
+fix.fct <- function(x) {
+  if (is.null(x)) x <- NA
+  return(x)
+}
+
+#' Reads XML data for stockholder data
+#'
+#' @param x A list with stockholder data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.stockholder <- function(x) {
+
+  df.out <- data.frame(type.register = x$TipoRegistro,
+                       id.person = fix.fct(x$Pessoa$IdentificacaoPessoa),
+                       id.nationality = fix.fct(x$Nacionalidade),
+                       id.state = fix.fct(x$Estado$NomeEstado),
+                       id.country = fix.fct(x$Estado$Pais$NomePais),
+                       name.stockholder = fix.fct(x$Pessoa$NomePessoa),
+                       type.stockholder = fix.fct(x$Pessoa$TipoPessoa),
+                       qtd.ord.shares = x$QuantidadeAcoesOrdinarias,
+                       perc.ord.shares = x$PercentualAcoesOrdinarias,
+                       qtd.pref.shares = x$QuantidadeAcoesPreferenciais,
+                       perc.pref.shares = x$PercentualAcoesPreferenciais,
+                       controlling.stockholder = switch(x$AcionistaControlador,
+                                                        '1' = TRUE,
+                                                        '2' = FALSE,
+                                                        '0' = FALSE),
+                       stringsAsFactors = FALSE )
+
+
+  return(df.out)
+}
+
+
+#' Reads XML data for transaction data
+#'
+#' @param x A list with transaction data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.transactions.related <- function(x) {
+
+  df.out <- data.frame(id.transaction = fix.fct(x$NumIdtTnsaPateRelc),
+                       name.related.part = fix.fct(x$NomePateRelc),
+                       date.transaction = as.Date(x$DataTnsa),
+                       description.related.part = fix.fct(x$DescRelcPateRelcEmss),
+                       description.transaction = fix.fct(x$DescObjtCotr),
+                       value.transaction = fix.fct(x$ValMontEnvldoNeg),
+                       description.guarantees = fix.fct(x$DescGarnSeguRelc),
+                       description.transaction.period = fix.fct(x$DescDuraTnsa),
+                       description.rescision = fix.fct(x$DescCondResc),
+                       interest.rate = as.numeric(fix.fct(x$FatTaxaJuro)),
+                       value.balance = fix.fct(x$ValSaldExis),
+                       stringsAsFactors = FALSE)
+
+  return(df.out)
+}
+
+#' Reads XML data for splits/inplits data
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.splits.inplits <- function(x) {
+
+  df.out <- data.frame(approval.date = as.Date(x$DataAprovacao),
+                       type.event = x$DetalheDominio$DescricaoOpcaoDominio,
+                       qtd.ord.shares.before = as.numeric(x$QuantidadeAcaoOrdinariaAntesAprovacao),
+                       qtd.ord.shares.after = as.numeric(x$QuantidadeAcaoOrdinariaDepoisAprovacao),
+                       qtd.pref.shares.before = as.numeric(x$QuantidadeAcaoPreferencialAntesAprovacao),
+                       qtd.pref.shares.after = as.numeric(x$QuantidadeAcaoPreferencialDepoisAprovacao),
+                       stringsAsFactors = FALSE)
+
+
+  return(df.out)
+
+}
+
+#' Reads XML data for repurchases
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.repurchases <- function(x) {
+
+  info.stock = x$HistoricosPlanosRecompraClasseEspecieAcao$HistoricoPlanoRecompraClasseEspecieAcao
+
+  df.out <- data.frame(date.decision = as.Date(x$DataDeliberacao),
+                       date.start.repurchase = as.Date(x$DataInicialPeriodoRecompraAprovado),
+                       date.end.repurchase = as.Date(x$DataFinalPeriodoRecompraAprovado),
+                       available.capital.repurchase = as.numeric(x$ReservaLucrosParaRecompraAprovado),
+                       type.stock = info.stock$DescricaoEspecieAcaoAdquirida,
+                       qtd.stocks.repurchased = as.numeric(info.stock$QuantidadeAcoesAdquirida),
+                       qtd.stocks.predicted = as.numeric(info.stock$QuantidadeAcoesPrevista),
+                       average.price = as.numeric(info.stock$PrecoMedioPonderadoAdquirida),
+                       percent.stock.float.purchased = as.numeric(info.stock$PercentualAcoesCirculacaoAdquirida),
+                       percent.stock.float.predicted = info.stock$PercentualAcoesCirculacaoPrevista,
+                       stringsAsFactors = FALSE)
+
+  return(df.out)
+
+}
+
+#' Reads XML data for debt
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.debt <- function(x) {
+
+  df.out <- data.frame(type.debt = fix.fct(x$CodigoTipoObrigacao$DescricaoOpcaoDominio),
+                       type.debt.guarantee = fix.fct(x$CodigoTipoGarantia$DescricaoOpcaoDominio),
+                       debt.value.under.1.year = fix.fct(as.numeric(x$ValorDividaInferiorAUmAno)),
+                       debt.value.1.to.3.years = as.numeric(x$ValorDividaUmATresAnos),
+                       debt.value.3.to.5.years = as.numeric(x$ValorDividaTresACincoAnos),
+                       debt.value.more.5.years = as.numeric(x$ValorDividaSuperiorACincoAnos),
+                       stringsAsFactors = FALSE)
+
+  df.out$debt.total <- with(df.out, debt.value.under.1.year +
+                              debt.value.1.to.3.years +
+                              debt.value.3.to.5.years +
+                              debt.value.more.5.years)
+
+  return(df.out)
+
+}
+
+#' Reads XML data for capital reduction data
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.capital.reduction <- function(x) {
+
+  if (is.null(x)) return(data.frame())
+
+  df.out <- data.frame(date.deliberation = as.Date(x$DataDeliberacao),
+                       date.capital.reduction = as.Date(x$DataReducaoCapital),
+                       total.value.reduction = as.numeric(x$ValorTotalReducaoCapital),
+                       qtd.ordinary.shares = as.numeric(x$QuantidadeAcaoOrdinaria),
+                       qtd.preferred.shares = as.numeric(x$QuantidadeAcaoPreferencial),
+                       qtd.shares = as.numeric(x$QuantidadeTotalAcao),
+                       value.per.stock = as.numeric(x$ValorRestituidoPorAcao),
+                       description.restitution = x$DescricaoFormaRestituicao,
+                       reason.restitution = x$RazaoParaReducao,
+                       type.action = x$TipoAcaoRealizada,
+                       stringsAsFactors = FALSE)
+
+
+
+  return(df.out)
+}
