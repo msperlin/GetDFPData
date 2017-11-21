@@ -275,7 +275,8 @@ gdfpd.GetDFPData <- function(name.companies,
       my.filename <- iconv(temp.df2$name.company, to = 'ASCII//TRANSLIT')
       my.filename <- stringr::str_replace_all(my.filename, stringr::fixed('?'), '_')
 
-      temp.file = file.path(folder.out, paste0(temp.df2$id.company, '_',
+      temp.file = file.path(folder.out, paste0('DFP_',
+                                               temp.df2$id.company, '_',
                                                stringr::str_sub(my.filename,1,4), '_',
                                                i.date, '.zip') )
 
