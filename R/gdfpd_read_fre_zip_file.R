@@ -255,6 +255,64 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
   df.debt.composition <- do.call(what = rbind, lapply(xml_data, xml.fct.debt))
   rownames(df.debt.composition) <- NULL
 
+  # get: composition management and fiscal council
+  company.reg.file <- file.path(rnd.folder.name,'AdministradorMembroConselhoFiscalNegocios.xml')
+  xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
+
+  x <- xml_data[[1]]
+
+  xml.fct.board.composition <- function(x) {
+
+    df.out <- data.frame(person.name = fix.fct(x$PessoaMembro$NomePessoa),
+                         person.cpf = fix.fct(x$PessoaMembro$IdentificacaoPessoa),
+                         person.profession = fix.fct(x$DescricaoProfissao),
+                         person.dob = fix.fct(as.Date(x$DataNascimento)),
+                         code.type.board = fix.fct(x$CodTipoOrgaoAdministracao),
+                         code.type.job = fix.fct(x$CodTipoOrgaoFuncaoExercida),
+                         desc.board = fix.fct(x$DescricaoCargoFuncaoExercida),
+                         desc.job = fix.fct(x$DescricaoOutroCargoFuncaoExercida),
+                         date.election = fix.fct(as.Date(x$DataEleicao)),
+                         date.effective = fix.fct(as.Date(x$DataPosse)),
+                         mandate.duration = fix.fct(x$PrazoMandato),
+                         qtd.consecutive.mandates = fix.fct(x$QteMandatosConsecutivos),
+                         percentage.participation = fix.fct(x$PercParticipacaoReunioes),
+                         stringsAsFactors = FALSE)
+
+    return(df.out)
+
+  }
+
+
+  df.board.composition <- do.call(what = rbind, lapply(xml_data, xml.fct.board.composition))
+  rownames(df.board.composition) <- NULL
+
+  # get: composition commitees
+  company.reg.file <- file.path(rnd.folder.name,'MembroComiteNegocios.xml')
+  xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
+
+  xml.fct.commitee.composition <- function(x) {
+
+    df.out <- data.frame(person.name = fix.fct(x$PessoaMembro$NomePessoa),
+                         person.profession = fix.fct(x$DescricaoProfissao),
+                         person.dob = fix.fct(as.Date(x$DataNascimento)),
+                         code.type.commitee = fix.fct(x$CodTipoComite),
+                         code.type.job = fix.fct(x$CodTipoCargo),
+                         desc.commitee = fix.fct(x$DescricaoOutroComite),
+                         desc.job = fix.fct(x$DescricaoOutroCargo),
+                         date.election = fix.fct(as.Date(x$DataEleicao)),
+                         date.effective = fix.fct(as.Date(x$DataPosse)),
+                         mandate.duration = fix.fct(x$PrazoMandato),
+                         qtd.consecutive.mandates = fix.fct(x$QteMandatosConsecutivos),
+                         percentage.participation = fix.fct(x$PercParticipacaoReunioes),
+                         stringsAsFactors = FALSE)
+
+    return(df.out)
+
+  }
+
+  df.commitee.composition <- do.call(what = rbind, lapply(xml_data, xml.fct.commitee.composition))
+  rownames(df.commitee.composition) <- NULL
+
   # save output
 
   my.l <- list(df.stockholders = df.stockholders,
