@@ -94,9 +94,9 @@ gdfpd.read.zip.file.type.fca <- function(rnd.folder.name, folder.to.unzip = temp
     type.market <- xml_data$ValorMobiliario$MercadoNegociacao$DescricaoOpcaoDominio
     name.market <- xml_data$ValorMobiliario$MercadosNegociacao$MercadoNegociacao$EntidadeAdministradora$SiglaOpcaoDominio
 
-    df.governance.listings <- data.frame(listed.segment,
-                                         type.market,
-                                         name.market, stringsAsFactors = FALSE)
+    df.governance.listings <- data.frame(fix.fct(listed.segment),
+                                         fix.fct(type.market),
+                                         fix.fct(name.market), stringsAsFactors = FALSE)
   }
 
   # save output
