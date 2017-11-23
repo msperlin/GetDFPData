@@ -14,7 +14,7 @@
 #' df.assets <- df.reports$fr.assets[[1]]
 #'
 #' df.assets.fixed <- gdfpd.fix.dataframes(df.assets,
-#'                                         inflation.index = 'none',
+#'                                         inflation.index = 'dollar',
 #'                                         df.inflation = data.frame())
 gdfpd.fix.dataframes <- function(df.in, inflation.index, df.inflation, max.levels = 3) {
 

@@ -31,6 +31,6 @@ load(my.f)
 df.assets <- df.reports$fr.assets[[1]]
 
 df.assets.fixed <- gdfpd.fix.dataframes(df.assets,
-                                        inflation.index = 'none',
+                                        inflation.index = 'dollar',
                                         df.inflation = data.frame())
 }

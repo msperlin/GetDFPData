@@ -130,14 +130,25 @@ gdfpd.export.DFP.data <- function(df.reports,
 #' type.export <- 'csv'
 #'
 #' my.copy.fct(df.in = test.data, name.df, base.file.name, type.export)
-my.copy.fct <- function(df.in, name.df, base.file.name, type.export, csv.dir = tempdir()) {
+my.copy.fct <- function(df.in, name.df, base.file.name,
+                        type.export = 'xlsx',
+                        csv.dir = tempdir()) {
+
+  # sanity check
+  possible.values <- c('csv', 'xlsx')
+  if ( !(any(type.export %in% possible.values)) ){
+    stop('Input type.export should be "csv" or "xlsx"')
+  }
+
+  possible.values <-
 
   cat(paste0('\n\tCopying table ', name.df, ' - ', nrow(df.in), ' rows, ', ncol(df.in), ' columns'))
 
   if (nrow(df.in) == 0) df.in <- data.frame(NODATA = 'No DATA')
 
   if (type.export == 'xlsx') {
-    xlsx::write.xlsx(x = df.in, file = paste0(base.file.name,'.',type.export),
+    xlsx::write.xlsx(x = df.in,
+                     file = paste0(base.file.name,'.',type.export),
                      sheetName = name.df,
                      append = T )
   }
@@ -152,7 +163,10 @@ my.copy.fct <- function(df.in, name.df, base.file.name, type.export, csv.dir = t
                            paste0(stringr::str_replace_all(name.df,
                                                            pattern = stringr::fixed('.'), '_'), '.csv'))
 
-    utils::write.csv(df.in, file = temp.file, row.names = FALSE)
+    utils::write.csv(df.in,
+                     file = temp.file,
+                     row.names = FALSE,
+                     fileEncoding = 'UTF-8')
   }
 
   invisible(TRUE)

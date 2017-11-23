@@ -97,7 +97,7 @@ gdfpd.read.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = tempdi
 
   company.reg.file <- file.path(rnd.folder.name,'FormularioDemonstracaoFinanceiraDFP.xml')
 
-  xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'Latin1'))
+  xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
 
   # get basic info
 
@@ -118,7 +118,7 @@ gdfpd.read.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = tempdi
   }
 
 
-  xml_data <- XML::xmlToList(XML::xmlParse(fin.report.file, encoding = 'Latin1'))
+  xml_data <- XML::xmlToList(XML::xmlParse(fin.report.file, encoding = 'UTF-8'))
   file.remove(fin.report.file)
 
   # function to get individual DF
