@@ -11,9 +11,9 @@
 #'
 #' my.f <- system.file('extdata/9512_PETR_2002-12-31.zip', package = 'GetDFPData')
 #'
-#' my.l <- gdfpd.read.zip.file(my.f, id.type = 'before 2011')
+#' my.l <- gdfpd.read.dfp.zip.file(my.f, id.type = 'before 2011')
 #' print(my.l)
-gdfpd.read.zip.file <- function(my.zip.file,
+gdfpd.read.dfp.zip.file <- function(my.zip.file,
                                 folder.to.unzip = tempdir(),
                                 id.type) {
 
@@ -41,7 +41,7 @@ gdfpd.read.zip.file <- function(my.zip.file,
   }
 
   my.basename <- tools::file_path_sans_ext(basename(my.zip.file))
-  rnd.folder.name <- file.path(folder.to.unzip, paste0('DIR-DFP_',my.basename))
+  rnd.folder.name <- file.path(folder.to.unzip, paste0('DIR-',my.basename))
 
   if (!dir.exists(rnd.folder.name)) dir.create(rnd.folder.name)
 
@@ -61,11 +61,11 @@ gdfpd.read.zip.file <- function(my.zip.file,
   }
 
   if (id.type == 'after 2011') {
-    my.l <- gdfpd.read.zip.file.type.1(rnd.folder.name, folder.to.unzip)
+    my.l <- gdfpd.read.dfp.zip.file.type.1(rnd.folder.name, folder.to.unzip)
   }
 
   if (id.type == 'before 2011') {
-    my.l <- gdfpd.read.zip.file.type.2(rnd.folder.name, folder.to.unzip)
+    my.l <- gdfpd.read.dfp.zip.file.type.2(rnd.folder.name, folder.to.unzip)
   }
 
   # check for empty dfs
@@ -86,14 +86,14 @@ gdfpd.read.zip.file <- function(my.zip.file,
 
 #' Reads folder for zip file post 2011 (internal)
 #'
-#' @inheritParams gdfpd.read.zip.file
+#' @inheritParams gdfpd.read.dfp.zip.file
 #' @param rnd.folder.name Folder where unzipped files are available
 #'
 #' @return A list with financial statements
 #'
 #' @examples
 #' # no example (this functions not used directly)
-gdfpd.read.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = tempdir()) {
+gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = tempdir()) {
 
   company.reg.file <- file.path(rnd.folder.name,'FormularioDemonstracaoFinanceiraDFP.xml')
 
@@ -197,14 +197,14 @@ gdfpd.read.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = tempdi
 
 #' Reads folder for zip file pre 2011 (internal)
 #'
-#' @inheritParams gdfpd.read.zip.file
+#' @inheritParams gdfpd.read.dfp.zip.file
 #' @param rnd.folder.name Folder where unzipped files are available
 #'
 #' @return A list with financial statements
 #'
 #' @examples
 #' # no example (this functions not used directly)
-gdfpd.read.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = tempdir()) {
+gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = tempdir()) {
 
   my.f <- list.files(rnd.folder.name,'DFPBPA', full.names = T)[1]
   df.assets <- gdfpd.read.fwf.file(my.f)

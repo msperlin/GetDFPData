@@ -258,6 +258,9 @@ gdfpd.GetDFPData <- function(name.companies,
     df.fre.debt.composition <- data.frame()
     df.fre.governance.listings <- data.frame()
     df.fre.capital.reduction <- data.frame()
+    df.fre.board.composition <- data.frame()
+    df.fre.committee.composition <- data.frame()
+    df.fre.family.relations <- data.frame()
     for (i.date in as.character(temp.df$id.date) ) {
 
       temp.df2 <- temp.df[temp.df$id.date == i.date,  ]
@@ -312,7 +315,7 @@ gdfpd.GetDFPData <- function(name.companies,
         cat(' | reading file')
 
         suppressWarnings({
-          l.out <- gdfpd.read.zip.file(my.zip.file = temp.file, folder.to.unzip = tempdir(),
+          l.out <- gdfpd.read.dfp.zip.file(my.zip.file = temp.file, folder.to.unzip = tempdir(),
                                        id.type = temp.df2$id.type)
         })
 
@@ -490,6 +493,9 @@ gdfpd.GetDFPData <- function(name.companies,
         df.fre.debt.composition <- dplyr::bind_rows(df.fre.debt.composition, l.out.FRE$df.debt.composition)
         df.fre.governance.listings <- dplyr::bind_rows(df.fre.governance.listings, l.out.FCA$df.governance.listings)
         df.fre.capital.reduction <- dplyr::bind_rows(df.fre.capital.reduction, l.out.FRE$df.capital.reduction)
+        df.fre.board.composition <- dplyr::bind_rows(df.fre.board.composition, l.out.FRE$df.board.composition)
+        df.fre.committee.composition <- dplyr::bind_rows(df.fre.committee.composition, l.out.FRE$df.committee.composition)
+        df.fre.family.relations <- dplyr::bind_rows(df.fre.family.relations, l.out.FRE$df.family.relations)
       })
     }
 
@@ -538,7 +544,7 @@ gdfpd.GetDFPData <- function(name.companies,
                                      fr.cashflow = list(df.cashflow),
                                      history.dividends = list(df.dividends),
                                      history.stockholders = list(df.fre.stock.holders),
-                                     history.capital = list(df.fre.capital),
+                                     history.capital.issues = list(df.fre.capital),
                                      #history.stock.values = list(df.fre.stock.values),
                                      history.mkt.value = list(df.fre.mkt.value),
                                      history.capital.increases = list(df.fre.increase.capital),
@@ -549,7 +555,10 @@ gdfpd.GetDFPData <- function(name.companies,
                                      history.compensation.summary = list(df.fre.compensation.summary),
                                      history.transactions.related = list(df.fre.transactions.related),
                                      history.debt.composition = list(df.fre.debt.composition),
-                                     history.governance.listings = list(df.fre.governance.listings)
+                                     history.governance.listings = list(df.fre.governance.listings),
+                                     history.board.composition = list(df.fre.board.composition),
+                                     history.committee.composition = list(df.fre.committee.composition),
+                                     history.family.relations = list(df.fre.family.relations)
                                      )
 
     # bind for final df

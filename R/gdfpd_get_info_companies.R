@@ -77,7 +77,7 @@ gdfpd.get.info.companies <- function(type.data = 'companies_files', cache.folder
   if (type.data == 'companies') {
 
     my.cols <- my.cols <- c("name.company","id.company", "situation", "listing.segment",
-                            "main.sector", "sub.sector", "segment", "tickers")
+                            "main.sector", "tickers")
     df.info.agg <- unique(df.info[, my.cols])
 
     my.fun <- function(df) {

@@ -331,3 +331,78 @@ xml.fct.capital.reduction <- function(x) {
 
   return(df.out)
 }
+
+#' Reads XML data for commitee composition
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.committee.composition <- function(x) {
+
+  df.out <- data.frame(person.name = fix.fct(x$PessoaMembro$NomePessoa),
+                       person.profession = fix.fct(x$DescricaoProfissao),
+                       person.dob = as.Date(fix.fct(x$DataNascimento)),
+                       code.type.committee = fix.fct(x$CodTipoComite),
+                       desc.type.committee = switch(fix.fct(x$CodTipoComite),
+                                                '1' = 'Auditing Committee',
+                                                '2' = 'Risk Committee',
+                                                '3' = 'Financial Committee',
+                                                '4' = 'Remuneration Committee',
+                                                '9' = 'Other Committee'),
+                       code.type.job = fix.fct(x$CodTipoCargo),
+                       desc.committee = fix.fct(x$DescricaoOutroComite),
+                       desc.job = fix.fct(x$DescricaoOutroCargo),
+                       date.election = fix.fct(as.Date(x$DataEleicao)),
+                       date.effective = fix.fct(as.Date(x$DataPosse)),
+                       mandate.duration = fix.fct(x$PrazoMandato),
+                       qtd.consecutive.mandates = as.numeric(fix.fct(x$QteMandatosConsecutivos)),
+                       percentage.participation = as.numeric(fix.fct(x$PercParticipacaoReunioes)),
+                       stringsAsFactors = FALSE)
+
+  return(df.out)
+
+}
+
+#' Reads XML data for board composition
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.board.composition <- function(x) {
+
+  df.out <- data.frame(person.name = fix.fct(x$PessoaMembro$NomePessoa),
+                       person.cpf = fix.fct(x$PessoaMembro$IdentificacaoPessoa),
+                       person.profession = fix.fct(x$DescricaoProfissao),
+                       person.dob = as.Date(fix.fct(x$DataNascimento)),
+                       code.type.board = fix.fct(x$CodTipoOrgaoAdministracao),
+                       desc.type.board = switch(fix.fct(x$CodTipoOrgaoAdministracao),
+                                                '1' = 'Director',
+                                                '2' = 'Management Council',
+                                                '3' = 'Counselor',
+                                                '4' = 'Fiscal Council'),
+                       desc.type.board2 = fix.fct(x$DescricaoCargoFuncaoExercida),
+                       code.type.job = fix.fct(x$CodTipoOrgaoFuncaoExercida),
+                       desc.job = fix.fct(x$DescricaoOutroCargoFuncaoExercida),
+                       date.election = fix.fct(as.Date(x$DataEleicao)),
+                       date.effective = fix.fct(as.Date(x$DataPosse)),
+                       mandate.duration = fix.fct(x$PrazoMandato),
+                       ellected.by.controller = switch(fix.fct(x$CodEleitoPeloControlador),
+                                                       '1' = TRUE,
+                                                       '2' = FALSE),
+                       qtd.consecutive.mandates = as.numeric(fix.fct(x$QteMandatosConsecutivos)),
+                       percentage.participation = as.numeric(fix.fct(x$PercParticipacaoReunioes)),
+                       stringsAsFactors = FALSE)
+
+  return(df.out)
+
+}
