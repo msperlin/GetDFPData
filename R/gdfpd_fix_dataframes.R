@@ -12,10 +12,11 @@
 #' load(my.f)
 #'
 #' df.assets <- df.reports$fr.assets[[1]]
+#' df.inflation <- gdfpd.get.inflation.data('dollar', do.cache = FALSE)
 #'
 #' df.assets.fixed <- gdfpd.fix.dataframes(df.assets,
 #'                                         inflation.index = 'dollar',
-#'                                         df.inflation = data.frame())
+#'                                         df.inflation = df.inflation)
 gdfpd.fix.dataframes <- function(df.in, inflation.index, df.inflation, max.levels = 3) {
 
   # if empty df
@@ -92,6 +93,7 @@ gdfpd.fix.dataframes <- function(df.in, inflation.index, df.inflation, max.level
     # find closest date for dollar
     match.neardate <- function(date.in, table.dates) {
       idx <- which.min(abs(date.in - table.dates))
+
       return(idx)
     }
 

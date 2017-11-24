@@ -67,7 +67,7 @@ gdfpd.read.fca.zip.file <- function(my.zip.file,
 
 #' Reads folder for FCA zip file contents (internal)
 #'
-#' @inheritParams gdfpd.read.zip.file
+#' @inheritParams gdfpd.read.fca.zip.file
 #' @param rnd.folder.name Folder where unzipped files are available
 #'
 #' @return A list with FCA data

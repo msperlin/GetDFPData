@@ -66,7 +66,7 @@ gdfpd.read.fre.zip.file <- function(my.zip.file,
 
 #' Reads folder for zip file post 2011 (internal)
 #'
-#' @inheritParams gdfpd.read.zip.file
+#' @inheritParams gdfpd.read.fre.zip.file
 #' @param rnd.folder.name Folder where unzipped files are available
 #'
 #' @return A list with financial statements

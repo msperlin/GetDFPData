@@ -29,8 +29,9 @@ my.f <- system.file('extdata/Example_DFP_Report_Petrobras.RData', package = 'Get
 load(my.f)
 
 df.assets <- df.reports$fr.assets[[1]]
+df.inflation <- gdfpd.get.inflation.data('dollar', do.cache = FALSE)
 
 df.assets.fixed <- gdfpd.fix.dataframes(df.assets,
                                         inflation.index = 'dollar',
-                                        df.inflation = data.frame())
+                                        df.inflation = df.inflation)
 }

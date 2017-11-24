@@ -26,6 +26,9 @@ install.packages('GetDFPData') # not in CRAN yet
 devtools::install_github('msperlin/GetDFPData')
 ```
 
+# Shinny interface
+
+A web interface of `GetDFPData` is available at [https://msperlin.shinyapps.io/GetDFPData/](https://msperlin.shinyapps.io/GetDFPData/).
 
 # How to use `GetDFPData`
 
@@ -103,7 +106,7 @@ my.companies <- c('PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS',
                   'BANCO DO ESTADO DO RIO GRANDE DO SUL SA')
 
 first.date <- '2005-01-01'
-last.date  <- '2009-01-01'
+last.date  <- '2007-01-01'
 type.statements <- 'individual'
 
 df.reports <- gdfpd.GetDFPData(name.companies = my.companies, 

@@ -8,6 +8,8 @@ gdfpd.read.zip.file.type.fca(rnd.folder.name, folder.to.unzip = tempdir())
 }
 \arguments{
 \item{rnd.folder.name}{Folder where unzipped files are available}
+
+\item{folder.to.unzip}{Folder to unzip files, default = tempdir()}
 }
 \value{
 A list with FCA data
