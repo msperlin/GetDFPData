@@ -10,27 +10,28 @@
 #' # No example (INTERNAL)
 xml.fct.compensation <- function(x) {
 
-  df.out <- data.frame(level.remuneration = switch(x$CodigoOrgaoAdministrador,
+  df.out <- data.frame(level.remuneration = switch(fix.fct(x$CodigoOrgaoAdministrador),
+                                                   '0' = NA,
                                                    '1' = 'Management Council',
                                                    '2' = 'Statutory Directors',
                                                    '3' = 'Fiscal Council'),
-                       qtd.members = as.numeric(x$QuantidadeMembros),
+                       qtd.members = as.numeric(fix.fct(x$QuantidadeMembros)),
                        qtd.remunerated.members = switch(as.character(is.null(x$QtdMembrosRemunerados)),
                                                         'TRUE' = NA,
                                                         'FALSE' = as.numeric(x$QtdMembrosRemunerados)),
-                       total.value.remuneration = as.numeric(x$ValorTotalRemuneracao),
-                       fixed.salary = as.numeric(x$ValorFixoSalario),
-                       fixed.benefits = as.numeric(x$ValorFixoBeneficios),
-                       fixed.participations = as.numeric(x$ValorFixoParticipacoesComites),
-                       fixed.others = as.numeric(x$ValorFixoOutros),
-                       variable.bonus = as.numeric(x$ValorVariavelBonus),
-                       variable.results.participation = as.numeric(x$ValorVariavelParticipacaoResultados),
-                       variable.meetings.participation = as.numeric(x$ValorVariavelParticipacoesReunioes),
-                       variable.commissions.participation = as.numeric(x$ValorVariavelComissoes),
-                       variable.others = as.numeric(x$ValorVariavelOutros),
-                       post.job.compensation = as.numeric(x$ValorBeneficiosPosEmprego),
-                       ceasing.job.compensation = as.numeric(x$ValorBeneficiosCessacaoCargo),
-                       stocks.options.benefits = as.numeric(x$ValorBeneficiosBaseadaAcoes),
+                       total.value.remuneration = as.numeric(fix.fct(x$ValorTotalRemuneracao)),
+                       fixed.salary = as.numeric(fix.fct(x$ValorFixoSalario)),
+                       fixed.benefits = as.numeric(fix.fct(x$ValorFixoBeneficios)),
+                       fixed.participations = as.numeric(fix.fct(x$ValorFixoParticipacoesComites)),
+                       fixed.others = as.numeric(fix.fct(x$ValorFixoOutros)),
+                       variable.bonus = as.numeric(fix.fct(x$ValorVariavelBonus)),
+                       variable.results.participation = as.numeric(fix.fct(x$ValorVariavelParticipacaoResultados)),
+                       variable.meetings.participation = as.numeric(fix.fct(x$ValorVariavelParticipacoesReunioes)),
+                       variable.commissions.participation = as.numeric(fix.fct(x$ValorVariavelComissoes)),
+                       variable.others = as.numeric(fix.fct(x$ValorVariavelOutros)),
+                       post.job.compensation = as.numeric(fix.fct(x$ValorBeneficiosPosEmprego)),
+                       ceasing.job.compensation = as.numeric(fix.fct(x$ValorBeneficiosCessacaoCargo)),
+                       stocks.options.benefits = as.numeric(fix.fct(x$ValorBeneficiosBaseadaAcoes)),
                        stringsAsFactors = FALSE)
 
 
@@ -83,12 +84,12 @@ xml.fct.compensation.summary <- function(x) {
 #'
 #' # No example (INTERNAL)
 xml.fct.capital <- function(x) {
-  df.out <- data.frame(date.increase.capital = as.Date(x$DataDeliberacao),
-                       name.authorizing.department = x$NomeOrgaoDeliberacaoAcrescimo,
-                       value.increase.capital = as.numeric(x$ValorTotalEmissao),
-                       type.increase.capital = as.numeric(x$CodigoTipoSubscricao),
-                       qtd.new.ordinary.shares = as.numeric(x$QuantidadeAcaoOrdinaria),
-                       qtd.new.preferred.shares = as.numeric(x$QuantidadeAcaoPreferencial),
+  df.out <- data.frame(date.increase.capital = as.Date(fix.fct(x$DataDeliberacao)),
+                       name.authorizing.department = fix.fct(x$NomeOrgaoDeliberacaoAcrescimo),
+                       value.increase.capital = as.numeric(fix.fct(x$ValorTotalEmissao)),
+                       type.increase.capital = as.numeric(fix.fct(x$CodigoTipoSubscricao)),
+                       qtd.new.ordinary.shares = as.numeric(fix.fct(x$QuantidadeAcaoOrdinaria)),
+                       qtd.new.preferred.shares = as.numeric(fix.fct(x$QuantidadeAcaoPreferencial)),
                        stringsAsFactors = FALSE)
 
   return(df.out)
@@ -315,16 +316,16 @@ xml.fct.capital.reduction <- function(x) {
 
   if (is.null(x)) return(data.frame())
 
-  df.out <- data.frame(date.deliberation = as.Date(x$DataDeliberacao),
-                       date.capital.reduction = as.Date(x$DataReducaoCapital),
-                       total.value.reduction = as.numeric(x$ValorTotalReducaoCapital),
-                       qtd.ordinary.shares = as.numeric(x$QuantidadeAcaoOrdinaria),
-                       qtd.preferred.shares = as.numeric(x$QuantidadeAcaoPreferencial),
-                       qtd.shares = as.numeric(x$QuantidadeTotalAcao),
-                       value.per.stock = as.numeric(x$ValorRestituidoPorAcao),
-                       description.restitution = x$DescricaoFormaRestituicao,
-                       reason.restitution = x$RazaoParaReducao,
-                       type.action = x$TipoAcaoRealizada,
+  df.out <- data.frame(date.deliberation = as.Date(fix.fct(x$DataDeliberacao)),
+                       date.capital.reduction = as.Date(fix.fct(x$DataReducaoCapital)),
+                       total.value.reduction = as.numeric(fix.fct(x$ValorTotalReducaoCapital)),
+                       qtd.ordinary.shares = as.numeric(fix.fct(x$QuantidadeAcaoOrdinaria)),
+                       qtd.preferred.shares = as.numeric(fix.fct(x$QuantidadeAcaoPreferencial)),
+                       qtd.shares = as.numeric(fix.fct(x$QuantidadeTotalAcao)),
+                       value.per.stock = as.numeric(fix.fct(x$ValorRestituidoPorAcao)),
+                       description.restitution = fix.fct(x$DescricaoFormaRestituicao),
+                       reason.restitution = fix.fct(x$RazaoParaReducao),
+                       type.action = fix.fct(x$TipoAcaoRealizada),
                        stringsAsFactors = FALSE)
 
 
@@ -353,7 +354,8 @@ xml.fct.committee.composition <- function(x) {
                                                 '2' = 'Risk Committee',
                                                 '3' = 'Financial Committee',
                                                 '4' = 'Remuneration Committee',
-                                                '9' = 'Other Committee'),
+                                                '9' = 'Other Committee',
+                                                NA),
                        code.type.job = fix.fct(x$CodTipoCargo),
                        desc.committee = fix.fct(x$DescricaoOutroComite),
                        desc.job = fix.fct(x$DescricaoOutroCargo),
@@ -389,7 +391,8 @@ xml.fct.board.composition <- function(x) {
                                                 '1' = 'Director',
                                                 '2' = 'Management Council',
                                                 '3' = 'Counselor',
-                                                '4' = 'Fiscal Council'),
+                                                '4' = 'Fiscal Council',
+                                                NA),
                        desc.type.board2 = fix.fct(x$DescricaoCargoFuncaoExercida),
                        code.type.job = fix.fct(x$CodTipoOrgaoFuncaoExercida),
                        desc.job = fix.fct(x$DescricaoOutroCargoFuncaoExercida),
@@ -397,6 +400,7 @@ xml.fct.board.composition <- function(x) {
                        date.effective = fix.fct(as.Date(x$DataPosse)),
                        mandate.duration = fix.fct(x$PrazoMandato),
                        ellected.by.controller = switch(fix.fct(x$CodEleitoPeloControlador),
+                                                       '0' = NA,
                                                        '1' = TRUE,
                                                        '2' = FALSE),
                        qtd.consecutive.mandates = as.numeric(fix.fct(x$QteMandatosConsecutivos)),

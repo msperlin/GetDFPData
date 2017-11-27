@@ -86,6 +86,7 @@ gdfpd.GetDFPData <- function(name.companies,
   }
 
   # get data from github
+
   df.info <- gdfpd.get.info.companies(type.data = 'companies_files',
                                       cache.folder = cache.folder)
   unique.names <- unique(df.info$name.company)
@@ -161,7 +162,7 @@ gdfpd.GetDFPData <- function(name.companies,
 
   # warn user for lack of cash flow data
   if (any(df.to.process$id.date < as.Date('2009-01-01'))) {
-    cat('\nWARNING: Cash flow statements are not available before 2009, the \n\n')
+    cat('\nWARNING: Cash flow statements are not available before 2009 \n\n')
   }
 
   # start processing
@@ -184,12 +185,13 @@ gdfpd.GetDFPData <- function(name.companies,
 
   for (i.company in unique(df.to.process$name.company)) {
 
-    my.id <- temp.df$id.company[1]
-    cat(paste0('\nProcessing ', my.id, ' - ',  i.company) )
-
+    # filter data
     idx <- (df.to.process$name.company == i.company)&
       (df.to.process$type.fin.report == 'dfp')
     temp.df <- df.to.process[idx,  ]
+
+    my.id <- temp.df$id.company[1]
+    cat(paste0('\nProcessing ', my.id, ' - ',  i.company) )
 
     # get data from Bovespa site
     cat(paste0('\n\tFinding info from Bovespa') )

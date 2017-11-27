@@ -30,11 +30,11 @@ gdfpd.get.info.companies <- function(type.data = 'companies_files', cache.folder
 
   # check if cache file exists
   my.f.rdata <- file.path(cache.folder,paste0('df_info_CACHED_', type.data,
-                                              '_', Sys.Date(), '.RData') )
+                                              '_', Sys.Date(), '.rds') )
 
   if (file.exists(my.f.rdata)) {
     cat('Found cache file. Loading data..')
-    load(my.f.rdata)
+    df.info <- readRDS(my.f.rdata)
     return(df.info)
   }
 
@@ -64,6 +64,21 @@ gdfpd.get.info.companies <- function(type.data = 'companies_files', cache.folder
   # remove rows without id for dates or situation
   idx <- (!is.na(df.info$id.date))&(!is.na(df.info$situation))
   df.info <- df.info[idx, ]
+
+  # filter blacklist of files. These are zipped files with 0 content. Probably error from B3
+  black.list <- c('http://www2.bmfbovespa.com.br/dxw/Download.asp?moeda=L&site=B&mercado=1&ccvm=12696&data=31/12/2003&tipo=2',
+                  'http://www2.bmfbovespa.com.br/dxw/Download.asp?moeda=L&site=B&mercado=1&ccvm=12696&data=31/12/2002&tipo=2',
+                  'http://www2.bmfbovespa.com.br/dxw/Download.asp?moeda=L&site=B&mercado=1&ccvm=12696&data=31/12/1998&tipo=2',
+                  'http://www2.bmfbovespa.com.br/dxw/Download.asp?moeda=L&site=B&mercado=1&ccvm=14443&data=31/12/1998&tipo=2',
+                  'http://www.rad.cvm.gov.br/enetconsulta/frmDownloadDocumento.aspx?CodigoInstituicao=2&NumeroSequencialDocumento=26725',
+                  'http://www2.bmfbovespa.com.br/dxw/Download.asp?moeda=L&site=B&mercado=1&ccvm=1023&data=31/12/1999&tipo=2',
+                  'http://www2.bmfbovespa.com.br/dxw/Download.asp?moeda=L&site=B&mercado=1&ccvm=1023&data=31/12/1998&tipo=2',
+                  'http://www2.bmfbovespa.com.br/dxw/Download.asp?moeda=L&site=B&mercado=1&ccvm=14311&data=31/12/2000&tipo=2',
+                  'http://www2.bmfbovespa.com.br/dxw/Download.asp?moeda=L&site=B&mercado=1&ccvm=14311&data=31/12/1998&tipo=2',
+                  'http://www.rad.cvm.gov.br/enetconsulta/frmDownloadDocumento.aspx?CodigoInstituicao=2&NumeroSequencialDocumento=48125',
+                  'http://www.rad.cvm.gov.br/enetconsulta/frmDownloadDocumento.aspx?CodigoInstituicao=2&NumeroSequencialDocumento=46050',
+                  'http://www.rad.cvm.gov.br/enetconsulta/frmDownloadDocumento.aspx?CodigoInstituicao=2&NumeroSequencialDocumento=15509')
+  df.info <- df.info[ !(df.info$dl.link %in% black.list), ]
 
   n.actives <- sum(unique(df.info[ ,c('name.company', 'situation')])$situation == 'ATIVO')
   n.inactives <- sum(unique(df.info[ ,c('name.company', 'situation')])$situation != 'ATIVO' )
@@ -98,7 +113,7 @@ gdfpd.get.info.companies <- function(type.data = 'companies_files', cache.folder
   }
 
   cat('\nCaching RDATA into tempdir()')
-  save('df.info', file = my.f.rdata)
+  saveRDS(object = df.info, file = my.f.rdata)
 
   return(df.info)
 

@@ -202,7 +202,7 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
                                          xml.fct.capital.reduction))
   rownames(df.capital.reduction) <- NULL
 
-  # get: payment policy
+  # get: compensation details
   company.reg.file <- file.path(rnd.folder.name,'RemuneracaoReconhecidaAdministradores.xml')
   xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
 
