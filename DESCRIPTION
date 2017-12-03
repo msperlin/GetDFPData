@@ -1,5 +1,5 @@
 Package: GetDFPData
-Title: Reading Annual Financial Reports from Bovespa's DFP and FRE System
+Title: Reading Annual Financial Reports from Bovespa's DFP and FRE System 
 Version: 0.5
 Date: 2017-10-30
 Authors@R: person("Marcelo", "Perlin", email = "marceloperlin@gmail.com", role = c("aut", "cre"))
