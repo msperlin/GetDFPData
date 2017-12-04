@@ -229,7 +229,7 @@ my.fix.cols <- function(df.in, name.company, ref.date ) {
 }
 
 
-#' Merges (row wise) dataframes from different list, using names of dataframes
+#' Merges (row wise) dataframes from different list, using names of dataframes as index
 #'
 #' @param l.1 First dataframe
 #' @param l.2 Second dataframe
@@ -239,16 +239,18 @@ my.fix.cols <- function(df.in, name.company, ref.date ) {
 #'
 #' @examples
 #'
-#' l.i1 <- list(x = dataframe(runif(10)) )
-#' l.i2 <- list(x = dataframe(runif(10)) )
+#' l.1 <- list(x = data.frame(runif(10)) )
+#' l.2 <- list(x = data.frame(runif(10)) )
 #'
-#' l <- merge.dfs.lists(l.1, l.2)
+#' l <- my.merge.dfs.lists(l.1, l.2)
 #'
-merge.dfs.lists <- function(l.1, l.2) {
+my.merge.dfs.lists <- function(l.1, l.2) {
   names.1 <- names(l.1)
   names.2 <- names(l.2)
 
   if (is.null(names.1)) return(l.2)
+
+  if (is.null(names.2)) return(l.1)
 
   if (!all(names.1 == names.2)) {
     stop('Cant bind dataframes. Names in lists dont match!')

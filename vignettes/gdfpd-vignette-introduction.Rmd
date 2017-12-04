@@ -63,12 +63,10 @@ All you need to download financial data with `GetDFPData` are the official names
 name.companies <- 'PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS'
 first.date <- '2004-01-01'
 last.date  <- '2006-01-01'
-type.statements <- 'individual'
 
 df.reports <- gdfpd.GetDFPData(name.companies = name.companies, 
                                first.date = first.date,
                                last.date = last.date,
-                               type.info = type.statements, 
                                cache.folder = tempdir())
 ```
 
@@ -78,7 +76,7 @@ The resulting object is a `tibble`, a data.frame type of object that allows for 
 glimpse(df.reports)
 ```
 
-Object `df.reports` only has one row since we only asked for data of one company. The number of rows increases with the number of companies, as we will soon learn with the next example. All financial statements for the different years are available within `df.reports`. For example, the income statements for all desired years of PETROBRAS are:
+Object `df.reports` only has one row since we only asked for data of one company. The number of rows increases with the number of companies, as we will soon learn with the next example. All financial statements for the different years are available within `df.reports`. For example, the assets statements for all desired years of PETROBRAS are:
 
 ```{r}
 df.income.long <- df.reports$fr.income[[1]]
@@ -112,7 +110,6 @@ type.statements <- 'individual'
 df.reports <- gdfpd.GetDFPData(name.companies = my.companies, 
                                first.date = first.date,
                                last.date = last.date,
-                               type.info = type.statements,
                                cache.folder = tempdir())
 ```
 
@@ -137,7 +134,7 @@ As an example, let's use the resulting dataframe for calculating and analyzing a
 library(dplyr)
 
 my.tab <- df.assets.liabilities %>%
-  group_by(company.name, ref.date) %>%
+  group_by(name.company, ref.date) %>%
   summarise(Liq.Index = acc.value[acc.number == '1.01']/ acc.value[acc.number == '2.01'])
 
 my.tab
@@ -148,7 +145,7 @@ Now we can visualize the information using `ggplot2`:
 ```{r}
 library(ggplot2)
 
-p <- ggplot(my.tab, aes(x = ref.date, y = Liq.Index, fill = company.name)) +
+p <- ggplot(my.tab, aes(x = ref.date, y = Liq.Index, fill = name.company)) +
   geom_col(position = 'dodge' )
 print(p)
 ```

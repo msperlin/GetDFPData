@@ -197,6 +197,7 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
                df.income.cons = df.income.cons,
                df.cashflow.cons = df.cashflow.cons)
 
+
   return(my.l)
 }
 
@@ -275,6 +276,7 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
                df.liabilities.cons = df.liabilities.cons,
                df.income.cons = df.income.cons,
                df.cashflow.cons = df.cashflow.cons)
+
 
   return(my.l)
 }
