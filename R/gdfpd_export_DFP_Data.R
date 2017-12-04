@@ -46,6 +46,10 @@ gdfpd.export.DFP.data <- function(df.reports,
   # set dir for csv files
   csv.dir <- file.path(tempdir(), 'CSV-DIR')
 
+  # empty csv dir
+  my.f <- list.files(path = csv.dir, full.names = TRUE)
+  file.remove(my.f)
+
   # copy metadata
   df.to.copy <- df.reports[ ,c("company.name", "company.code", "type.info",
                                "min.date", "max.date", "n.periods")]
