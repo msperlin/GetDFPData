@@ -78,8 +78,7 @@ gdfpd.read.dfp.zip.file <- function(my.zip.file,
     return(df.out)
   }
 
-  my.l$cons.dfs <- lapply(my.l$cons.dfs, my.fct)
-  my.l$ind.dfs  <- lapply(my.l$ind.dfs , my.fct)
+  my.l <- lapply(my.l, my.fct)
 
   return(my.l)
 }
@@ -179,18 +178,24 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
   consolidated.df <- data.frame(acc.number,acc.desc,acc.value)
 
   # save info
-  df.assets <- stats::na.omit(consolidated.df[stringr::str_sub(consolidated.df$acc.number,1,1) == '1', ])
-  df.liabilities <- stats::na.omit(consolidated.df[stringr::str_sub(consolidated.df$acc.number,1,1) == '2', ])
-  df.income    <- stats::na.omit(consolidated.df[stringr::str_sub(consolidated.df$acc.number,1,1) == '3', ])
-  df.cashflow    <- stats::na.omit(consolidated.df[stringr::str_sub(consolidated.df$acc.number,1,1) == '6', ])
+  df.assets.cons <- stats::na.omit(consolidated.df[stringr::str_sub(consolidated.df$acc.number,1,1) == '1', ])
+  df.liabilities.cons <- stats::na.omit(consolidated.df[stringr::str_sub(consolidated.df$acc.number,1,1) == '2', ])
+  df.income.cons    <- stats::na.omit(consolidated.df[stringr::str_sub(consolidated.df$acc.number,1,1) == '3', ])
+  df.cashflow.cons    <- stats::na.omit(consolidated.df[stringr::str_sub(consolidated.df$acc.number,1,1) == '6', ])
 
   l.consolidated.dfs <- list(df.assets = df.assets,
                              df.liabilities = df.liabilities,
                              df.income = df.income,
                              df.cashflow = df.cashflow)
 
-  my.l <- list(ind.dfs = l.individual.dfs,
-               cons.dfs = l.consolidated.dfs)
+  my.l <- list(df.assets = df.assets,
+               df.liabilities = df.liabilities,
+               df.income = df.income,
+               df.cashflow = df.cashflow,
+               df.assets.cons = df.assets.cons,
+               df.liabilities.cons = df.liabilities.cons,
+               df.income.cons = df.income.cons,
+               df.cashflow.cons = df.cashflow.cons)
 
   return(my.l)
 }
@@ -235,25 +240,25 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
   # get consolidated fin statements
 
   my.f <- list.files(rnd.folder.name,'DFPCBPA', full.names = T)[1]
-  df.assets <- gdfpd.read.fwf.file(my.f)
+  df.assets.cons <- gdfpd.read.fwf.file(my.f)
 
 
   my.f <- list.files(rnd.folder.name,'DFPCBPP', full.names = T)[1]
-  df.liabilities <- gdfpd.read.fwf.file(my.f)
+  df.liabilities.cons <- gdfpd.read.fwf.file(my.f)
 
 
   my.f <- list.files(rnd.folder.name,'DFPCDER', full.names = T)[1]
-  df.income <- gdfpd.read.fwf.file(my.f)
+  df.income.cons <- gdfpd.read.fwf.file(my.f)
 
 
   my.f <- list.files(rnd.folder.name,'DFPCDFCE', full.names = T)
 
   if (length(my.f) == 0) {
-    df.cashflow <- data.frame(acc.desc  = NA,
+    df.cashflow.cons <- data.frame(acc.desc  = NA,
                               acc.value = NA,
                               acc.number = NA)
   } else {
-    df.cashflow <- gdfpd.read.fwf.file(my.f[1])
+    df.cashflow.cons <- gdfpd.read.fwf.file(my.f[1])
   }
 
   l.consolidated.dfs<- list(df.assets = df.assets,
@@ -262,8 +267,14 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
                            df.cashflow = df.cashflow)
   # get basic info
 
-  my.l <- list(ind.dfs = l.individual.dfs,
-               cons.dfs = l.consolidated.dfs)
+  my.l <- list(df.assets = df.assets,
+               df.liabilities = df.liabilities,
+               df.income = df.income,
+               df.cashflow = df.cashflow,
+               df.assets.cons = df.assets.cons,
+               df.liabilities.cons = df.liabilities.cons,
+               df.income.cons = df.income.cons,
+               df.cashflow.cons = df.cashflow.cons)
 
   return(my.l)
 }

@@ -91,6 +91,10 @@ gdfpd.get.info.companies <- function(type.data = 'companies_files', cache.folder
 
   if (type.data == 'companies') {
 
+    # filter by dfp/fre data
+    idx <- df.info$type.fin.report != 'itr'
+    df.info <- df.info[idx, ]
+
     my.cols <- my.cols <- c("name.company","id.company", "situation", "listing.segment",
                             "main.sector", "tickers")
     df.info.agg <- unique(df.info[, my.cols])

@@ -30,7 +30,7 @@ gdfpd.convert.to.wide <- function(data.in, data.in.cols = 'original') {
                       'inflation adjusted' =  'acc.value.infl.adj')
 
   df.wide <- reshape2::dcast(data = data.in,
-                             formula = acc.number + acc.desc + company.name  ~ ref.date,
+                             formula = acc.number + acc.desc + name.company  ~ ref.date,
                              value.var = value.var, fill = 0)
 
   return(df.wide)
@@ -226,4 +226,44 @@ my.fix.cols <- function(df.in, name.company, ref.date ) {
   df.in <- as.data.frame(lapply(X = df.in, my.fct), stringsAsFactors = FALSE)
 
   return(df.in)
+}
+
+
+#' Merges (row wise) dataframes from different list, using names of dataframes
+#'
+#' @param l.1 First dataframe
+#' @param l.2 Second dataframe
+#'
+#' @return A list with binded dataframes (same names as l.1)
+#' @export
+#'
+#' @examples
+#'
+#' l.i1 <- list(x = dataframe(runif(10)) )
+#' l.i2 <- list(x = dataframe(runif(10)) )
+#'
+#' l <- merge.dfs.lists(l.1, l.2)
+#'
+merge.dfs.lists <- function(l.1, l.2) {
+  names.1 <- names(l.1)
+  names.2 <- names(l.2)
+
+  if (is.null(names.1)) return(l.2)
+
+  if (!all(names.1 == names.2)) {
+    stop('Cant bind dataframes. Names in lists dont match!')
+  }
+
+  n.elem <- length(l.1)
+
+  l.out <- list()
+  for (i.l in seq(n.elem)) {
+
+    l.out[[i.l]] <- dplyr::bind_rows(l.1[[i.l]], l.2[[i.l]])
+
+  }
+
+  names(l.out) <- names(l.2)
+  return(l.out)
+
 }

@@ -14,10 +14,13 @@
 #' df.assets <- df.reports$fr.assets[[1]]
 #' df.inflation <- gdfpd.get.inflation.data('dollar', do.cache = FALSE)
 #'
-#' df.assets.fixed <- gdfpd.fix.dataframes(df.assets,
+#' df.assets.fixed <- gdfpd.fix.DFP.dataframes(df.assets,
 #'                                         inflation.index = 'dollar',
 #'                                         df.inflation = df.inflation)
-gdfpd.fix.dataframes <- function(df.in, inflation.index, df.inflation, max.levels = 3) {
+gdfpd.fix.DFP.dataframes <- function(df.in, inflation.index, df.inflation, max.levels = 3) {
+
+  # remove NA
+  df.in <- stats::na.omit(df.in)
 
   # if empty df
   if (nrow(df.in) == 0) {
@@ -35,7 +38,6 @@ gdfpd.fix.dataframes <- function(df.in, inflation.index, df.inflation, max.level
   #browser()
 
   # fix names of acc.desc using latest info
-  df.in$ref.date <- as.Date(df.in$ref.date)
   max.date <- max(df.in$ref.date)
 
   # fix names for cashflow statements (from 4.01 to 6.01)
@@ -103,9 +105,8 @@ gdfpd.fix.dataframes <- function(df.in, inflation.index, df.inflation, max.level
   }
 
   # fix cols order
-  my.col <- c("company.name","ref.date", "acc.number", "acc.desc",
+  my.col <- c("name.company","ref.date", "acc.number", "acc.desc",
               "acc.value", "acc.value.infl.adj")
-  df.in <- df.in[ , my.col]
 
   return(df.in)
 }
