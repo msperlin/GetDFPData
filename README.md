@@ -6,7 +6,7 @@ Package `GetDFPData` provides a R interface to all financial statements and comp
 
 A web interface of the package is available at [http://www.msperlin.com/shiny/GetDFPData/](http://www.msperlin.com/shiny/GetDFPData/).
 
-# Installation
+# Installation 
 
 The package is available in CRAN (release version) and in Github (development version). You can install any of those with the following code:
 
