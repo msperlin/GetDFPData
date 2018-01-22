@@ -86,6 +86,7 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
 
   # get stock holders composition
 
+  #browser()
   df.stockholders <- do.call(what = rbind, lapply(xml_data,xml.fct.stockholder))
   rownames(df.stockholders) <- NULL
 

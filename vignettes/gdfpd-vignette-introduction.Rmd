@@ -13,10 +13,19 @@ Financial statements of companies traded at B3 (formerly Bovespa), the Brazilian
 
 Package `GetDFPData` provides a R interface to all annual financial statements available in the website and more. It not only downloads the data but also organizes it in a tabular format and allows the use of inflation indexes. Users can select companies and a time period to download all available data. Several information about current companies, such as sector and available quarters are also at reach. The main purpose of the package is to make it easy to access financial statements in large scale research, facilitating the reproducibility of corporate finance studies with B3 data.
 
+The positive aspects of `GetDFDData` are:
+
+- Easy and simple R and web interface
+- Changes in accounting format are internally handled by the software
+- Access to corporate events in the FRE system such as dividend payments, changes in stock holder composition, changes in governance listings, board composition and compensation, debt composition, and a lot more! 
+- The output data is automatically organized using tidy data principles (long format)
+- A cache system is employed for fast data acquisition
+- Completely free and open source!
+
 
 # Installation
   
-The package is available in CRAN (release version) and in Github (development version). You can install any of those with the following code:
+The package is (not yet) available in CRAN (release version) and in Github (development version). You can install any of those with the following code:
   
 ```{r, eval=FALSE}
 # Release version in CRAN
@@ -28,11 +37,12 @@ devtools::install_github('msperlin/GetDFPData')
 
 # Shinny interface
 
-A web interface of `GetDFPData` is available at [https://msperlin.shinyapps.io/GetDFPData/](https://msperlin.shinyapps.io/GetDFPData/).
+The web interface of `GetDFPData` is available at [http://www.msperlin.com/shiny/GetDFPData/](http://www.msperlin.com/shiny/GetDFPData/).
+
 
 # How to use `GetDFPData`
 
-The starting point of `GetDFPData` is to find the official names of companies in Bovespa. Function `gdfpd.search.company` serves this purpose. Given a string (text), it will search for a partial matches in companies names. As an example, let's find the _official_ name of Petrobras, one of the largest companies in Brazil:
+The starting point of `GetDFPData` is to find the official names of companies in B3. Function `gdfpd.search.company` serves this purpose. Given a string (text), it will search for a partial matches in companies names. As an example, let's find the _official_ name of Petrobras, one of the largest companies in Brazil:
 
 ```{r}
 library(GetDFPData)
@@ -84,9 +94,9 @@ df.income.long <- df.reports$fr.income[[1]]
 glimpse(df.income.long)
 ```
 
-The resulting dataframe is in the long format, ready for processing. In the long format, financial statements of different quarters are stacked. In the wide format, we have the year as columns of the table. 
+The resulting dataframe is in the long format, ready for processing. In the long format, financial statements of different years are stacked. In the wide format, we have the year as columns of the table. 
 
-If you want the wide format, which is the most common way that financial reports are presented, you can use function `gDFPd.convert.to.wide`. See an example next:
+If you want the wide format, which is the most common way that financial reports are presented, you can use function `gdfpd.convert.to.wide`. See an example next:
 
 ```{r}
 df.income.wide <- gdfpd.convert.to.wide(df.income.long)

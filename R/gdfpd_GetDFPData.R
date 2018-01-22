@@ -432,7 +432,8 @@ gdfpd.GetDFPData <- function(name.companies,
       return(df.in)
     }
 
-    l.out.FRE <- lapply(l.out.FRE, my.fct.remove.dup)
+    # DONT REMOVE DUPLICATES (BUG IN history.stockholders)
+    #l.out.FRE <- lapply(l.out.FRE, my.fct.remove.dup)
 
     # save it all
     tibble.company <- tibble::tibble(company.name = i.company,
