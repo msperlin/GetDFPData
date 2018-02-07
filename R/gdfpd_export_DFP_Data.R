@@ -55,7 +55,7 @@ gdfpd.export.DFP.data <- function(df.reports,
                                "min.date", "max.date", "n.periods")]
 
   # get full dataframes
-  cols.to.copy <- names(df.reports)[9:ncol(df.reports)]
+  cols.to.copy <- names(df.reports)[11:ncol(df.reports)]
 
   suppressWarnings({
     my.l <- lapply(df.reports[, cols.to.copy],

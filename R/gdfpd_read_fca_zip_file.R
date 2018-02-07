@@ -89,19 +89,40 @@ gdfpd.read.zip.file.type.fca <- function(rnd.folder.name, folder.to.unzip = temp
   } else {
     xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file))
 
+    xml_data$ValorMobiliario$Documento$CompanhiaAberta$DataConstituicaoEmpresa
+
     xml_data2 <- xml_data$ValorMobiliario$MercadosNegociacao$MercadoNegociacao$Segmento
     listed.segment <- xml_data2$DescricaoOpcaoDominio
     type.market <- xml_data$ValorMobiliario$MercadoNegociacao$DescricaoOpcaoDominio
     name.market <- xml_data$ValorMobiliario$MercadosNegociacao$MercadoNegociacao$EntidadeAdministradora$SiglaOpcaoDominio
 
-    df.governance.listings <- data.frame(fix.fct(listed.segment),
-                                         fix.fct(type.market),
-                                         fix.fct(name.market), stringsAsFactors = FALSE)
+    df.governance.listings <- data.frame(listed.segment = fix.fct(listed.segment),
+                                         type.market = fix.fct(type.market),
+                                         name.market = fix.fct(name.market), stringsAsFactors = FALSE)
+  }
+
+
+  company.reg.file <- file.path(rnd.folder.name,'Documento.xml')
+  if (!file.exists(company.reg.file)) {
+    df.company.info <- data.frame(cnpj = NA,
+                                  date.company.constitution = NA,
+                                  date.cvm.registration = NA)
+  } else {
+    xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file))
+
+    cnpj <- xml_data$CompanhiaAberta$NumeroCnpjCompanhiaAberta
+    date.company.constitution <- as.Date(xml_data$CompanhiaAberta$DataConstituicaoEmpresa)
+    date.cvm.registration <- as.Date(xml_data$CompanhiaAberta$DataRegistroCvm)
+
+    df.company.info <- data.frame(cnpj = fix.fct(cnpj),
+                                  date.company.constitution = fix.fct(date.company.constitution),
+                                  date.cvm.registration = fix.fct(date.cvm.registration), stringsAsFactors = FALSE)
   }
 
   # save output
 
-  my.l <- list(df.governance.listings = df.governance.listings)
+  my.l <- list(df.governance.listings = df.governance.listings,
+               df.company.info = df.company.info)
 
   return(my.l)
 }
