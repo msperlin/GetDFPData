@@ -1,9 +1,7 @@
-### Version 0.6 (2018-12-07)
+### Version 0.6 (2018-02-15)
 
 - Fixed bugs
-- added date of companies to output (cvm registration and constitution)
-
-First version, with most code structure from GetITRData
+- added information about companies in output (cnpj, cvm registration and constitution)
 
 ### Version 0.5 (2017-11-01)
 
