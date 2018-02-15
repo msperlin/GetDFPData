@@ -435,6 +435,19 @@ gdfpd.GetDFPData <- function(name.companies,
     # DONT REMOVE DUPLICATES (BUG IN history.stockholders)
     #l.out.FRE <- lapply(l.out.FRE, my.fct.remove.dup)
 
+    # fix for empty FCA
+    if (length(l.out.FCA) ==0 ) {
+      df.governance.listings <- data.frame(listed.segment = NA,
+                                           type.market = NA,
+                                           name.market = NA)
+
+      df.company.info <- data.frame(cnpj = NA,
+                                    date.company.constitution = NA,
+                                    date.cvm.registration = NA)
+
+      l.out.FCA <- list(df.governance.listings = df.governance.listings,
+                        df.company.info = df.company.info)
+    }
     # save it all
     tibble.company <- tibble::tibble(company.name = i.company,
                                      company.code = temp.df$id.company[1],

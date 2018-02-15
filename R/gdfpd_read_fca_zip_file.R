@@ -50,7 +50,6 @@ gdfpd.read.fca.zip.file <- function(my.zip.file,
   my.files <- list.files(rnd.folder.name)
 
   if (length(my.files) == 0) {
-    #browser()
 
     file.remove(my.zip.file)
     stop(paste0('Zipped file contains 0 files. ',
@@ -58,7 +57,6 @@ gdfpd.read.fca.zip.file <- function(my.zip.file,
                 'Try running the code again as the corrupted zip file was deleted and will be downloaded again.',
                 '\n\nIf the problem persists, my suggestions is to remove the time period with problem.') )
   }
-
 
   my.l <- gdfpd.read.zip.file.type.fca(rnd.folder.name, folder.to.unzip)
 
