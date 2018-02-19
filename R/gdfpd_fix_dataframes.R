@@ -27,6 +27,9 @@ gdfpd.fix.DFP.dataframes <- function(df.in, inflation.index, df.inflation, max.l
     return(df.in)
   }
 
+  # if does not have 'acc.value' columns
+  if (!any(names(df.in) == 'acc.value')) return(df.in)
+
   # fix encoding
   df.in$acc.desc <- as.character(df.in$acc.desc)
   Encoding(df.in$acc.desc) <- 'UTF-8'

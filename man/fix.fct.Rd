@@ -4,10 +4,12 @@
 \alias{fix.fct}
 \title{Fix NULL values in dataframe}
 \usage{
-fix.fct(x)
+fix.fct(x, type.info = "character")
 }
 \arguments{
 \item{x}{Am object, possibly NULL}
+
+\item{type.info}{Type of object}
 }
 \value{
 A single object

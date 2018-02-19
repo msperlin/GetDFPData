@@ -1,7 +1,7 @@
 #' Fix NULL values in dataframe
 #'
 #' @param x Am object, possibly NULL
-#'
+#' @param type.info Type of object
 #' @return A single object
 #' @export
 #'
@@ -10,7 +10,7 @@
 #' x <- NULL
 #' x2 <- fix.fct(x)
 fix.fct <- function(x, type.info = 'character') {
-  if (is.null(x)) x <- NA
+  if (is.null(x)) return(NA)
 
   if (!(type.info %in% c('character', 'date', 'numeric'))) {
     stop('type.info should be ', paste0(c('character', 'date', 'numeric'), collapse = ' or '))
@@ -434,7 +434,16 @@ xml.fct.board.composition <- function(x) {
 
 }
 
-
+#' Reads XML data for family relations
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
 xml.fct.family.relations <- function(x) {
 
   df.out <- data.frame(person.name = fix.fct(x$PessoaAdministrador$NomePessoa),
@@ -451,23 +460,43 @@ xml.fct.family.relations <- function(x) {
 
 }
 
+#' Reads XML data for family related parts
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
 xml.fct.family.related.parts <- function(x) {
 
-  browser()
   df.out <- data.frame(person.name = fix.fct(x$AdministradorCadastroPessoa$NomePessoa),
                        person.cpf = fix.fct(x$AdministradorCadastroPessoa$IdentificacaoPessoa, 'numeric'),
                        person.job = fix.fct(x$DescricaoCargoFuncaoAdministrador),
                        type.related.person = fix.fct(x$DescricaoSubordinacao),
-                       related.person.cpf = as.numeric(fix.fct(x$PessoaRelacaoConjugal$IdentificacaoPessoa)),
-                       related.person.job = fix.fct(x$FuncaoRelacaoConjugal),
-                       code.relationship = fix.fct(x$RelacaoParentesco),
-                       desc.relationship = fix.fct(x$DescRelacaoParentesco),
+                       type.relationship = fix.fct(x$DescricaoTipoRelacao),
+                       observations = fix.fct(x$DescricaoObservacao),
+                       related.company.name = fix.fct(x$PessoaSubordinadaAdministradorCadastroPessoa$NomePessoa),
+                       related.company.cnpj = fix.fct(x$PessoaSubordinadaAdministradorCadastroPessoa$IdentificacaoPessoa, 'numeric'),
+                       related.company.job = fix.fct(x$DescricaoCargoFuncaoPessoaSubordinada),
                        stringsAsFactors = FALSE)
 
   return(df.out)
 
 }
 
+#' Reads XML data for auditing
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
 xml.fct.auditing <- function(x) {
 
   df.out <- data.frame(auditor.name = fix.fct(x$PessoaAuditor$NomePessoa),

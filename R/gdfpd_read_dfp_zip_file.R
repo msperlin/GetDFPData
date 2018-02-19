@@ -188,6 +188,19 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
                              df.income = df.income,
                              df.cashflow = df.cashflow)
 
+  # auditing report
+
+  fin.report.file <- file.path(rnd.folder.name, 'AnexoTexto.xml')
+
+  if (!file.exists(fin.report.file)) {
+    stop('Cant find file', fin.report.file)
+  }
+
+
+  xml_data <- XML::xmlToList(XML::xmlParse(fin.report.file, encoding = 'UTF-8'))
+
+  df.auditing.report = data.frame(text = xml_data$AnexoTexto$Texto, stringsAsFactors = FALSE)
+
   my.l <- list(df.assets = df.assets,
                df.liabilities = df.liabilities,
                df.income = df.income,
@@ -195,7 +208,8 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
                df.assets.cons = df.assets.cons,
                df.liabilities.cons = df.liabilities.cons,
                df.income.cons = df.income.cons,
-               df.cashflow.cons = df.cashflow.cons)
+               df.cashflow.cons = df.cashflow.cons,
+               df.auditing.report = df.auditing.report)
 
 
   return(my.l)
@@ -266,6 +280,11 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
                            df.liabilities = df.liabilities,
                            df.income = df.income,
                            df.cashflow = df.cashflow)
+
+  # auditing report
+
+  df.auditing.report = data.frame(text = NA)
+
   # get basic info
 
   my.l <- list(df.assets = df.assets,
@@ -275,7 +294,8 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
                df.assets.cons = df.assets.cons,
                df.liabilities.cons = df.liabilities.cons,
                df.income.cons = df.income.cons,
-               df.cashflow.cons = df.cashflow.cons)
+               df.cashflow.cons = df.cashflow.cons,
+               df.auditing.report = df.auditing.report)
 
 
   return(my.l)

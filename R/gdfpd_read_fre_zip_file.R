@@ -278,7 +278,7 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
   rownames(df.family.relations) <- NULL
 
   # get: family relations in related companies
-  browser()
+
   company.reg.file <- file.path(rnd.folder.name,'HistoricoRelacaoSubordinacaoAdministradorEmissor.xml')
   xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
 
@@ -311,6 +311,7 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
                df.board.composition = df.board.composition,
                df.committee.composition = df.committee.composition,
                df.family.relations = df.family.relations,
+               df.family.related.companies = df.family.related.companies,
                df.auditing = df.auditing )
 
   return(my.l)

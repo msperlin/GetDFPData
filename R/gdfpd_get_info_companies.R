@@ -95,8 +95,11 @@ gdfpd.get.info.companies <- function(type.data = 'companies_files', cache.folder
     idx <- df.info$type.fin.report != 'itr'
     df.info <- df.info[idx, ]
 
-    my.cols <- my.cols <- c("name.company","id.company", "situation", "listing.segment",
-                            "main.sector", "tickers")
+    my.cols <- my.cols <- c("name.company","id.company", "cnpj", "date.registration",
+                            "date.constitution", "city", "estate",
+                            "situation", "situation.operations", "listing.segment",
+                            "main.sector", "sub.sector", "segment", "tickers")
+
     df.info.agg <- unique(df.info[, my.cols])
 
     my.fun <- function(df) {
@@ -105,9 +108,9 @@ gdfpd.get.info.companies <- function(type.data = 'companies_files', cache.folder
     out <- by(data = df.info, INDICES = df.info$name.company, FUN = my.fun)
 
     df.temp <- data.frame(name.company = names(out),
-               first.date = sapply(out, FUN = function(x) as.character(x[1])),
-               last.date = sapply(out, FUN = function(x) as.character(x[2])),
-    stringsAsFactors = F )
+                          first.date = sapply(out, FUN = function(x) as.character(x[1])),
+                          last.date = sapply(out, FUN = function(x) as.character(x[2])),
+                          stringsAsFactors = F )
 
     df.info.agg <- merge(df.info.agg, df.temp, by = 'name.company')
     df.info.agg$first.date <- as.Date(df.info.agg$first.date)

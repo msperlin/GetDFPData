@@ -415,10 +415,12 @@ gdfpd.GetDFPData <- function(name.companies,
     }
 
     # clean up fr dataframes before saving
+
     l.out.DFP <- lapply(X = l.out.DFP, FUN = gdfpd.fix.DFP.dataframes,
                         inflation.index = inflation.index,
                         df.inflation = df.inflation,
                         max.levels = max.levels)
+
 
     # only get unique values of increase capital and other events (it repeats in the  FRE system)
 
@@ -469,6 +471,7 @@ gdfpd.GetDFPData <- function(name.companies,
                                      fr.liabilities.consolidated = list(l.out.DFP$df.liabilities.cons),
                                      fr.income.consolidated = list(l.out.DFP$df.income.cons),
                                      fr.cashflow.consolidated = list(l.out.DFP$df.cashflow.cons),
+                                     fr.auditing.report = list(l.out.DFP$df.auditing.report),
                                      history.dividends = list(l.out.bov$df.dividends),
                                      history.stockholders = list(l.out.FRE$df.stockholders),
                                      history.capital.issues = list(l.out.FRE$df.capital),
@@ -486,6 +489,7 @@ gdfpd.GetDFPData <- function(name.companies,
                                      history.board.composition = list(l.out.FRE$df.board.composition),
                                      history.committee.composition = list(l.out.FRE$df.committee.composition),
                                      history.family.relations = list(l.out.FRE$df.family.relations),
+                                     history.family.related.companies = list(l.out.FRE$df.family.related.companies),
                                      history.auditing = list(l.out.FRE$df.auditing))
 
     # bind for final df
