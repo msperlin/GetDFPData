@@ -485,7 +485,8 @@ gdfpd.GetDFPData <- function(name.companies,
                                      history.governance.listings = list(l.out.FCA$df.governance.listings),
                                      history.board.composition = list(l.out.FRE$df.board.composition),
                                      history.committee.composition = list(l.out.FRE$df.committee.composition),
-                                     history.family.relations = list(l.out.FRE$df.family.relations)   )
+                                     history.family.relations = list(l.out.FRE$df.family.relations),
+                                     history.auditing = list(l.out.FRE$df.auditing))
 
     # bind for final df
     suppressWarnings({
