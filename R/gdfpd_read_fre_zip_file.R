@@ -288,10 +288,14 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
 
   # get: auditing information
 
-  company.reg.file <- file.path(rnd.folder.name,'AuditorFormularioReferencia_v2.xml')
+  company.reg.file.1 <- file.path(rnd.folder.name, 'AuditorFormularioReferencia_v2.xml')
+  company.reg.file.2 <- file.path(rnd.folder.name, 'AuditorFormularioReferencia.xml')
+  my.files <-  c(company.reg.file.1, company.reg.file.2)
+  company.reg.file <-my.files[file.exists(my.files)]
+
   xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
 
-  df.auditing <- do.call(what = rbind, lapply(xml_data, xml.fct.auditing))
+  df.auditing <- do.call(what = dplyr::bind_rows, lapply(xml_data, xml.fct.auditing))
   rownames(df.auditing) <- NULL
 
   # save output

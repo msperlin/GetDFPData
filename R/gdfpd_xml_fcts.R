@@ -19,7 +19,7 @@ fix.fct <- function(x, type.info = 'character') {
   if (type.info == 'date') {
     x <- as.Date(x)
     if ( x == '1-01-01') {
-      x <- NA
+      x <- as.Date(NA)
     }
   }
 
@@ -368,7 +368,7 @@ xml.fct.committee.composition <- function(x) {
                        person.cpf = fix.fct(x$PessoaMembro$IdentificacaoPessoa, 'numeric'),
                        person.profession = fix.fct(x$DescricaoProfissao),
                        person.cv = fix.fct(x$ExperienciaProfissional),
-                       person.dob = as.Date(fix.fct(x$DataNascimento)),
+                       person.dob = fix.fct(x$DataNascimento, 'date'),
                        code.type.committee = fix.fct(x$CodTipoComite),
                        desc.type.committee = switch(fix.fct(x$CodTipoComite),
                                                 '1' = 'Auditing Committee',
