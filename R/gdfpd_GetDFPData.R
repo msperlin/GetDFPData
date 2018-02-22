@@ -187,7 +187,7 @@ gdfpd.GetDFPData <- function(name.companies,
 
 
     if (file.exists(f.cache)&(do.cache)) {
-      cat(paste0('\n\t\tFound cache file ', f.cache) )
+      cat(paste0('\n\t\tFound BOV cache file') )
 
       l.out.bov <- readRDS(f.cache)
     } else {
