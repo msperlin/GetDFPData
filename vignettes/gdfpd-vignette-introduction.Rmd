@@ -22,6 +22,7 @@ The positive aspects of `GetDFDData` are:
 - A cache system is employed for fast data acquisition
 - Completely free and open source!
 
+A white paper about the package is available at [SSRN](https://ssrn.com/abstract=3128252).
 
 # Installation
   
@@ -120,7 +121,8 @@ type.statements <- 'individual'
 df.reports <- gdfpd.GetDFPData(name.companies = my.companies, 
                                first.date = first.date,
                                last.date = last.date,
-                               cache.folder = tempdir())
+                               cache.folder = tempdir(), 
+                               fetch.new.files = FALSE)
 ```
 
 And now we can check the resulting `tibble`:
