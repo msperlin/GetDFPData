@@ -512,3 +512,25 @@ xml.fct.auditing <- function(x) {
   return(df.out)
 
 }
+
+#' Reads XML data for responsibles documents
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.responsible <- function(x) {
+
+
+  df.out <- data.frame(person.cod = fix.fct(x$CodResponsavel),
+                       person.name = fix.fct(x$NomeResponsavel),
+                       person.job = fix.fct(x$DescricaoCargo),
+                       stringsAsFactors = FALSE )
+
+  return(df.out)
+
+}

@@ -298,6 +298,17 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
   df.auditing <- do.call(what = dplyr::bind_rows, lapply(xml_data, xml.fct.auditing))
   rownames(df.auditing) <- NULL
 
+  # get: responsible for documents
+
+  company.reg.file.1 <- file.path(rnd.folder.name, 'ResponsavelConteudoFormularioNegociosNovo.xml')
+  my.files <-  company.reg.file.1
+  company.reg.file <-my.files[file.exists(my.files)]
+
+  xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
+
+  df.responsible.docs <- do.call(what = dplyr::bind_rows, lapply(xml_data, xml.fct.responsible ))
+  rownames(df.responsible.docs) <- NULL
+
   # save output
 
   my.l <- list(df.stockholders = df.stockholders,
@@ -316,7 +327,8 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
                df.committee.composition = df.committee.composition,
                df.family.relations = df.family.relations,
                df.family.related.companies = df.family.related.companies,
-               df.auditing = df.auditing )
+               df.auditing = df.auditing,
+               df.responsible.docs = df.responsible.docs)
 
   return(my.l)
 }
