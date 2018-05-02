@@ -49,7 +49,7 @@ The starting point of `GetDFPData` is to find the official names of companies in
 library(GetDFPData)
 library(tibble)
 
-gdfpd.search.company('petrobras',cache.folder = tempdir())
+gdfpd.search.company('petrobras', cache.folder = tempdir())
 
 ```
 
