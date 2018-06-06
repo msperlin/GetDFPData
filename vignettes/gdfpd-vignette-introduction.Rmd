@@ -30,7 +30,7 @@ The package is (not yet) available in CRAN (release version) and in Github (deve
   
 ```{r, eval=FALSE}
 # Release version in CRAN
-install.packages('GetDFPData') # not in CRAN yet
+install.packages('GetDFPData') 
 
 # Development version in Github
 devtools::install_github('msperlin/GetDFPData')
@@ -45,7 +45,7 @@ The web interface of `GetDFPData` is available at [http://www.msperlin.com/shiny
 
 The starting point of `GetDFPData` is to find the official names of companies in B3. Function `gdfpd.search.company` serves this purpose. Given a string (text), it will search for a partial matches in companies names. As an example, let's find the _official_ name of Petrobras, one of the largest companies in Brazil:
 
-```{r}
+```{r, eval=FALSE}
 library(GetDFPData)
 library(tibble)
 
@@ -57,7 +57,7 @@ Its official name in Bovespa records is `PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS
 
 The content of all available financial statements can be accessed with function `gdfpd.get.info.companies`. It will read and parse a .csv file from my [github repository](https://github.com/msperlin/GetDFPData_auxiliary). This will be periodically updated for new information. Let's try it out:
 
-```{r}
+```{r, eval=FALSE}
 df.info <- gdfpd.get.info.companies(type.data = 'companies', cache.folder = tempdir())
 
 glimpse(df.info)
@@ -70,7 +70,7 @@ This file includes several information that are gathered from Bovespa: names of 
 
 All you need to download financial data with `GetDFPData` are the official names of companies, which can be found with `gdfpd.search.company`, the desired starting and ending dates and the type of financial information (individual or consolidated). Let's try it for PETROBRAS:
 
-```{r}
+```{r, eval=FALSE}
 name.companies <- 'PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS'
 first.date <- '2004-01-01'
 last.date  <- '2006-01-01'
@@ -83,13 +83,13 @@ df.reports <- gdfpd.GetDFPData(name.companies = name.companies,
 
 The resulting object is a `tibble`, a data.frame type of object that allows for list columns. Let's have a look in its content:
 
-```{r}
+```{r, eval=FALSE}
 glimpse(df.reports)
 ```
 
 Object `df.reports` only has one row since we only asked for data of one company. The number of rows increases with the number of companies, as we will soon learn with the next example. All financial statements for the different years are available within `df.reports`. For example, the assets statements for all desired years of PETROBRAS are:
 
-```{r}
+```{r, eval=FALSE}
 df.income.long <- df.reports$fr.income[[1]]
 
 glimpse(df.income.long)
@@ -99,67 +99,10 @@ The resulting dataframe is in the long format, ready for processing. In the long
 
 If you want the wide format, which is the most common way that financial reports are presented, you can use function `gdfpd.convert.to.wide`. See an example next:
 
-```{r}
+```{r, eval=FALSE}
 df.income.wide <- gdfpd.convert.to.wide(df.income.long)
 
 knitr::kable(df.income.wide )
-```
-
-
-## Downloading financial information for SEVERAL companies
-
-If you are doing serious research, it is likely that you need financial statements for more than one company.  Package `GetDFPData` is specially designed for handling large scale download of data. Let's build a case with two selected companies:
-
-```{r}
-my.companies <- c('PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS',
-                  'BANCO DO ESTADO DO RIO GRANDE DO SUL SA')
-
-first.date <- '2005-01-01'
-last.date  <- '2007-01-01'
-type.statements <- 'individual'
-
-df.reports <- gdfpd.GetDFPData(name.companies = my.companies, 
-                               first.date = first.date,
-                               last.date = last.date,
-                               cache.folder = tempdir(), 
-                               fetch.new.files = FALSE)
-```
-
-And now we can check the resulting `tibble`:
-
-```{r}
-glimpse(df.reports)
-```
-
-Every row of `df.reports` will provide information for one company. Metadata about the corresponding dataframes such as min/max dates is available in the first columns. Keeping a tabular structure facilitates the organization and future processing of all financial data. We can use tibble `df.reports` for creating other dataframes in the long format containing data for all companies. See next, where we create dataframes with the assets and liabilities of all companies:
-
-```{r}
-df.assets <- do.call(what = rbind, args = df.reports$fr.assets)
-df.liabilities <- do.call(what = rbind, args = df.reports$fr.liabilities)
-
-df.assets.liabilities <- rbind(df.assets, df.liabilities)
-```
-
-As an example, let's use the resulting dataframe for calculating and analyzing a simple liquidity index of a company, the total of current (liquid) assets (_Ativo circulante_) divided by the total of current short term liabilities (_Passivo Circulante_), over time.
-
-```{r}
-library(dplyr)
-
-my.tab <- df.assets.liabilities %>%
-  group_by(name.company, ref.date) %>%
-  summarise(Liq.Index = acc.value[acc.number == '1.01']/ acc.value[acc.number == '2.01'])
-
-my.tab
-```
-
-Now we can visualize the information using `ggplot2`:
-
-```{r}
-library(ggplot2)
-
-p <- ggplot(my.tab, aes(x = ref.date, y = Liq.Index, fill = name.company)) +
-  geom_col(position = 'dodge' )
-print(p)
 ```
 
 
