@@ -13,7 +13,7 @@
 gdfpd.get.files.from.bovespa <- function(my.id) {
 
   df.info <- data.frame()
-
+  
   my.link <- paste0('http://bvmf.bmfbovespa.com.br/pt-br/mercados/acoes/empresas/ExecutaAcaoConsultaInfoEmp.asp?CodCVM=',
                     my.id, '&ViewDoc=0#a')
 

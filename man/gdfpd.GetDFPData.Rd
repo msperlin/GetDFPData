@@ -7,7 +7,7 @@
 gdfpd.GetDFPData(name.companies, first.date = Sys.Date() - 12 * 30,
   last.date = Sys.Date(), inflation.index = "dollar", max.levels = 3,
   folder.out = tempdir(), do.cache = TRUE,
-  cache.folder = "DFP Cache Folder", fetch.new.files = TRUE,
+  cache.folder = "DFP Cache Folder", fetch.new.files = FALSE,
   max.dl.tries = 10)
 }
 \arguments{
@@ -29,7 +29,7 @@ When using 'IPCA', the base date is set as the last date found in the DFP datase
 
 \item{cache.folder}{Folder to cache (save) all processed information. Default = file.path(getwd(),'DFP Cache Folder')}
 
-\item{fetch.new.files}{Logical. Should the function search for new files/data in Bovespa? (default = TRUE)}
+\item{fetch.new.files}{Logical. Should the function search for new files/data in Bovespa? (default = FALSE)}
 
 \item{max.dl.tries}{Maximum number of attempts for dowloading files}
 }

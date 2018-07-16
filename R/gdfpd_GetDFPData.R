@@ -16,7 +16,7 @@
 #' @param folder.out Folder where to download and manipulate the zip files. Default = tempdir()
 #' @param do.cache Logical for controlling to whether to use a cache system or not. Default = TRUE
 #' @param cache.folder Folder to cache (save) all processed information. Default = file.path(getwd(),'DFP Cache Folder')
-#' @param fetch.new.files Logical. Should the function search for new files/data in Bovespa? (default = TRUE)
+#' @param fetch.new.files Logical. Should the function search for new files/data in Bovespa? (default = FALSE)
 #' @param max.dl.tries Maximum number of attempts for dowloading files
 #'
 #' @return A tibble object with all gathered financial statements, with each company as a row
@@ -41,7 +41,7 @@ gdfpd.GetDFPData <- function(name.companies,
                              folder.out = tempdir(),
                              do.cache = TRUE,
                              cache.folder = 'DFP Cache Folder',
-                             fetch.new.files = TRUE,
+                             fetch.new.files = FALSE,
                              max.dl.tries = 10) {
 
   # sanity check
@@ -76,11 +76,11 @@ gdfpd.GetDFPData <- function(name.companies,
   if (!fetch.new.files ) {
 
 
+
     df.info <- gdfpd.get.info.companies(type.data = 'companies_files',
                                         cache.folder = cache.folder)
 
   }  else {
-
     df.info <- gdfpd.get.info.companies(type.data = 'companies')
 
     df.ids <- unique(df.info[, c('name.company', 'id.company')])
