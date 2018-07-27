@@ -91,6 +91,7 @@ gdfpd.search.company <- function(char.to.search, cache.folder = 'DFP Cache Folde
 #' Reads FWF file from bovespa (internal)
 #'
 #' @param my.f File to be read
+#' @param flag.thousands A flag for thousands values
 #' @inheritParams gdfpd.GetDFPData
 #' @inheritParams gdfpd.read.zip.file
 #' @return A dataframe with data
@@ -99,8 +100,8 @@ gdfpd.search.company <- function(char.to.search, cache.folder = 'DFP Cache Folde
 #'
 #' my.f <- system.file('extdata/DFPBPAE.001', package = 'GetDFPData')
 #'
-#' df.assets <- gdfpd.read.fwf.file(my.f)
-gdfpd.read.fwf.file <- function(my.f) {
+#' df.assets <- gdfpd.read.fwf.file(my.f, flag.thousands = FALSE)
+gdfpd.read.fwf.file <- function(my.f, flag.thousands) {
 
   if (length(my.f) == 0) {
     stop('Error: my.f is of length 0')
@@ -132,6 +133,9 @@ gdfpd.read.fwf.file <- function(my.f) {
 
 
   df.out <- df.out[, c('acc.number', 'acc.desc', 'acc.value')]
+
+  # fix for flag.thousands
+  if (flag.thousands) df.out$acc.value <- df.out$acc.value/1000
 
   # fix for empty data
   if (nrow(df.out) == 0) {

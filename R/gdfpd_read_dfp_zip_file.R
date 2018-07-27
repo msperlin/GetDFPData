@@ -11,8 +11,8 @@
 #'
 #' my.f <- system.file('extdata/9512_PETR_2002-12-31.zip', package = 'GetDFPData')
 #'
-#' my.l <- gdfpd.read.dfp.zip.file(my.f, id.type = 'before 2011')
-#' print(my.l)
+#' #my.l <- gdfpd.read.dfp.zip.file(my.f, id.type = 'before 2011')
+#' #print(my.l)
 gdfpd.read.dfp.zip.file <- function(my.zip.file,
                                     folder.to.unzip = tempdir(),
                                     id.type) {
@@ -98,6 +98,7 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
 
   xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
 
+
   # get basic info
 
   company.name = xml_data$CompanhiaAberta$NomeRazaoSocialCompanhiaAberta
@@ -110,18 +111,33 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
 
   utils::unzip(zipped.file, exdir = rnd.folder.name)
 
+
+  # check wheter thousands  are used
+  fin.report.file <- file.path(rnd.folder.name, 'FormularioDemonstracaoFinanceiraDFP.xml')
+
+  if (!file.exists(fin.report.file)) {
+    stop('Cant find file', fin.report.file)
+  }
+
+  xml_data <- XML::xmlToList(XML::xmlParse(fin.report.file, encoding = 'UTF-8'))
+  file.remove(fin.report.file)
+
+  flag.thousands <- switch(xml_data$Documento$CodigoEscalaMoeda,
+                           '2' = FALSE,
+                           '1' = TRUE)
+
+  # Get fin data data
   fin.report.file <- file.path(rnd.folder.name, 'InfoFinaDFin.xml')
 
   if (!file.exists(fin.report.file)) {
     stop('Cant find file', fin.report.file)
   }
 
-
   xml_data <- XML::xmlToList(XML::xmlParse(fin.report.file, encoding = 'UTF-8'))
   file.remove(fin.report.file)
 
   # function to get individual DF
-  my.fct <- function(x, type.df, info){
+  my.fct <- function(x, type.df, info, flag.thousands){
 
     if (type.df == 'individual') my.char = '1'
     if (type.df == 'consolidated') my.char = '2'
@@ -138,7 +154,7 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
         if (length(my.value)==0) {
           my.value <- 0
         } else {
-          my.value <- my.value[1]
+          my.value <- my.value[1]*(flag.thousands*1/1000)
         }
 
         return(my.value)
@@ -152,9 +168,9 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
 
   # get individual dfs
   type.df <- 'individual'
-  acc.desc  <- as.character(sapply(xml_data, my.fct, type.df = type.df, info = 'Descricao'))
-  acc.value <-   as.numeric(sapply(xml_data, my.fct, type.df = type.df, info = 'Valor'))
-  acc.number <- as.character(sapply(xml_data, my.fct, type.df = type.df, info = 'id'))
+  acc.desc  <- as.character(sapply(xml_data, my.fct, type.df = type.df, info = 'Descricao', flag.thousands = flag.thousands))
+  acc.value <-   as.numeric(sapply(xml_data, my.fct, type.df = type.df, info = 'Valor', flag.thousands = flag.thousands))
+  acc.number <- as.character(sapply(xml_data, my.fct, type.df = type.df, info = 'id', flag.thousands = flag.thousands))
 
   ind.df <- data.frame(acc.number,acc.desc,acc.value)
 
@@ -171,9 +187,9 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
 
   # get consolidated dfs
   type.df <- 'consolidated'
-  acc.desc  <- as.character(sapply(xml_data, my.fct, type.df = type.df, info = 'Descricao'))
-  acc.value <-   as.numeric(sapply(xml_data, my.fct, type.df = type.df, info = 'Valor'))
-  acc.number <- as.character(sapply(xml_data, my.fct, type.df = type.df, info = 'id'))
+  acc.desc  <- as.character(sapply(xml_data, my.fct, type.df = type.df, info = 'Descricao', flag.thousands = flag.thousands))
+  acc.value <-   as.numeric(sapply(xml_data, my.fct, type.df = type.df, info = 'Valor', flag.thousands = flag.thousands))
+  acc.number <- as.character(sapply(xml_data, my.fct, type.df = type.df, info = 'id', flag.thousands = flag.thousands))
 
   consolidated.df <- data.frame(acc.number,acc.desc,acc.value)
 
@@ -235,14 +251,22 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
 #' # no example (this functions not used directly)
 gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = tempdir()) {
 
+  # figure out flag.thousands
+  fin.report.file <- file.path(rnd.folder.name, 'CONFIG.XML')
+  xml_data <- XML::xmlToList(XML::xmlParse(fin.report.file, encoding = 'UTF-8'))
+  flag.thousands <- switch(xml_data$ROWDATA$ROW['MOEDA'],
+                           '02' = FALSE,
+                           '01' = TRUE)
+
+
   my.f <- list.files(rnd.folder.name,'DFPBPA', full.names = T)[1]
-  df.assets <- gdfpd.read.fwf.file(my.f)
+  df.assets <- gdfpd.read.fwf.file(my.f, flag.thousands)
 
   my.f <- list.files(rnd.folder.name, 'DFPBPP', full.names = T)[1]
-  df.liabilities <- gdfpd.read.fwf.file(my.f)
+  df.liabilities <- gdfpd.read.fwf.file(my.f, flag.thousands)
 
   my.f <- list.files(rnd.folder.name, 'DFPDERE', full.names = T)[1]
-  df.income <- gdfpd.read.fwf.file(my.f)
+  df.income <- gdfpd.read.fwf.file(my.f, flag.thousands)
 
 
   my.f <- list.files(rnd.folder.name, 'DFPDFCE', full.names = T)
@@ -252,7 +276,7 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
                               acc.value = NA,
                               acc.number = NA)
   }else {
-    df.cashflow <- gdfpd.read.fwf.file(my.f[1])
+    df.cashflow <- gdfpd.read.fwf.file(my.f[1], flag.thousands)
   }
 
   l.individual.dfs <- list(df.assets = df.assets,
@@ -260,19 +284,18 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
                            df.income = df.income,
                            df.cashflow = df.cashflow)
 
-
   # get consolidated fin statements
 
   my.f <- list.files(rnd.folder.name,'DFPCBPA', full.names = T)[1]
-  df.assets.cons <- gdfpd.read.fwf.file(my.f)
+  df.assets.cons <- gdfpd.read.fwf.file(my.f, flag.thousands)
 
 
   my.f <- list.files(rnd.folder.name,'DFPCBPP', full.names = T)[1]
-  df.liabilities.cons <- gdfpd.read.fwf.file(my.f)
+  df.liabilities.cons <- gdfpd.read.fwf.file(my.f, flag.thousands)
 
 
   my.f <- list.files(rnd.folder.name,'DFPCDER', full.names = T)[1]
-  df.income.cons <- gdfpd.read.fwf.file(my.f)
+  df.income.cons <- gdfpd.read.fwf.file(my.f, flag.thousands)
 
 
   my.f <- list.files(rnd.folder.name,'DFPCDFCE', full.names = T)
@@ -282,7 +305,7 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
                                    acc.value = NA,
                                    acc.number = NA)
   } else {
-    df.cashflow.cons <- gdfpd.read.fwf.file(my.f[1])
+    df.cashflow.cons <- gdfpd.read.fwf.file(my.f[1], flag.thousands)
   }
 
   l.consolidated.dfs<- list(df.assets = df.assets,

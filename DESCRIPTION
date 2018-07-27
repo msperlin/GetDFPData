@@ -1,7 +1,7 @@
 Package: GetDFPData
 Title: Reading Annual Financial Reports from Bovespa's DFP, FRE and FCA System 
-Version: 0.8
-Date: 2018-07-16
+Version: 0.9
+Date: 2018-07-26
 Authors@R: person("Marcelo", "Perlin", email = "marceloperlin@gmail.com", role = c("aut", "cre"))
 Description: Reads annual financial reports including assets, liabilities, dividends history, stockholder composition and much more from Bovespa's DFP, FRE and FCA systems <http://www.bmfbovespa.com.br/en_us/products/listed-equities-and-derivatives/equities/listed-companies.htm>.
  These are web based interfaces for all financial reports of companies traded at Bovespa. The package is specially designed for large scale data importation, keeping a tabular (long) structure for easier processing.  

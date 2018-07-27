@@ -1,3 +1,7 @@
+### Version 0.9 (2018-07-26)
+
+- Fixed thousands bug. Some small companies had nominal values, while the majority had it multiplied by thousands. The new code will divide by 1000 for the small companies. Any reported value in the DFP is always multiplied by thousands.
+
 ### Version 0.8 (2018-07-16)
 
 - Changed default value for get.new.files to FALSE. The code was not being able to scrape the data from B3 an returned an error. 

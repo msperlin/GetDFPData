@@ -4,10 +4,12 @@
 \alias{gdfpd.read.fwf.file}
 \title{Reads FWF file from bovespa (internal)}
 \usage{
-gdfpd.read.fwf.file(my.f)
+gdfpd.read.fwf.file(my.f, flag.thousands)
 }
 \arguments{
 \item{my.f}{File to be read}
+
+\item{flag.thousands}{A flag for thousands values}
 }
 \value{
 A dataframe with data
@@ -19,5 +21,5 @@ Reads FWF file from bovespa (internal)
 
 my.f <- system.file('extdata/DFPBPAE.001', package = 'GetDFPData')
 
-df.assets <- gdfpd.read.fwf.file(my.f)
+df.assets <- gdfpd.read.fwf.file(my.f, flag.thousands = FALSE)
 }
