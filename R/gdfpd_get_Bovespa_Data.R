@@ -25,7 +25,6 @@ gdfpd.get.bovespa.data <- function(my.id) {
   }
   # get data from bovespa
 
-
   my.link <- paste0('http://bvmf.bmfbovespa.com.br/pt-br/mercados/acoes/empresas/ExecutaAcaoConsultaInfoEmp.asp?CodCVM=',
                     my.id, '&ViewDoc=0#a')
   data.out <- XML::readHTMLTable(my.link,

@@ -111,7 +111,6 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
 
   utils::unzip(zipped.file, exdir = rnd.folder.name)
 
-
   # check wheter thousands  are used
   fin.report.file <- file.path(rnd.folder.name, 'FormularioDemonstracaoFinanceiraDFP.xml')
 
@@ -149,12 +148,15 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
 
 
         my.value <- as.numeric(c(x$ValorConta1, x$ValorConta2, x$ValorConta3,x$ValorConta4))
-
         my.value <- my.value[my.value != 0]
         if (length(my.value)==0) {
           my.value <- 0
         } else {
-          my.value <- my.value[1]*(flag.thousands*1/1000)
+          if (flag.thousands) {
+            my.value <- my.value[1]*1/1000
+          } else {
+            my.value <- my.value[1]
+          }
         }
 
         return(my.value)
@@ -221,9 +223,34 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
   if (is.na(xml_data)) {
     warning('Cant read auditing notes..')
 
-    df.auditing.report = data.frame(text = NA, stringsAsFactors = FALSE)
+    df.auditing.report = data.frame(text.indep.auditor =  NA,
+                                    text.fiscal.counsil = NA,
+                                    text.directors.about.fr = NA,
+                                    text.directors.about.auditor = NA,
+                                    stringsAsFactors = FALSE)
   } else {
-    df.auditing.report = data.frame(text = xml_data$AnexoTexto$Texto, stringsAsFactors = FALSE)
+
+    parsing.fct <- function(x, n.item) {
+
+      if (x$NumeroQuadroRelacionado == as.character(n.item)) {
+        return(x$Texto)
+      } else {
+        return('')
+      }
+    }
+
+
+    text.indep.auditor <- paste0(sapply(xml_data, parsing.fct, n.item = 1655 ), collapse = '')
+    text.fiscal.counsil <- paste0(sapply(xml_data, parsing.fct, n.item = 1657 ), collapse = '')
+    text.directors.about.fr <- paste0(sapply(xml_data, parsing.fct, n.item = 1660 ), collapse = '')
+    text.directors.about.auditor <- paste0(sapply(xml_data, parsing.fct, n.item = 1662 ), collapse = '')
+
+    df.auditing.report = data.frame(text.indep.auditor =  text.indep.auditor,
+                                    text.fiscal.counsil = text.fiscal.counsil,
+                                    text.directors.about.fr = text.directors.about.fr,
+                                    text.directors.about.auditor = text.directors.about.auditor,
+                                    stringsAsFactors = FALSE)
+
   }
 
   my.l <- list(df.assets = df.assets,

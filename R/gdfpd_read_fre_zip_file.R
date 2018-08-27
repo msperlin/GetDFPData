@@ -287,7 +287,6 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
 
 
   # get: auditing information
-
   company.reg.file.1 <- file.path(rnd.folder.name, 'AuditorFormularioReferencia_v2.xml')
   company.reg.file.2 <- file.path(rnd.folder.name, 'AuditorFormularioReferencia.xml')
   my.files <-  c(company.reg.file.1, company.reg.file.2)
