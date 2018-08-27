@@ -4,7 +4,8 @@
 \alias{gdfpd.read.zip.file.type.fca}
 \title{Reads folder for FCA zip file contents (internal)}
 \usage{
-gdfpd.read.zip.file.type.fca(rnd.folder.name, folder.to.unzip = tempdir())
+gdfpd.read.zip.file.type.fca(rnd.folder.name,
+  folder.to.unzip = tempdir())
 }
 \arguments{
 \item{rnd.folder.name}{Folder where unzipped files are available}
