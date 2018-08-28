@@ -252,6 +252,8 @@ gdfpd.GetDFPData <- function(name.companies,
 
       cat(paste0('\n\tProcessing ', my.id, ' - ', i.company, ' | date ', i.date  ) )
 
+      version.dfp.file <- temp.df2$version.file
+
       # get dfp data
       dl.link <- temp.df2$dl.link
 
@@ -295,6 +297,7 @@ gdfpd.GetDFPData <- function(name.companies,
         suppressWarnings({
           l.out.DFP.temp <- gdfpd.read.dfp.zip.file(my.zip.file = temp.file, folder.to.unzip = tempdir(),
                                                     id.type = temp.df2$id.type)
+
         })
 
         cat(' | saving cache')
@@ -312,9 +315,9 @@ gdfpd.GetDFPData <- function(name.companies,
         (df.to.process$type.fin.report == 'fre')&
         (format(df.to.process$id.date, '%Y') == format(temp.df2$id.date, '%Y'))
 
-      temp.df.fca <- df.to.process[idx,  ]
+      temp.df.fre <- df.to.process[idx,  ]
 
-      if (nrow(temp.df.fca) == 0) {
+      if (nrow(temp.df.fre) == 0) {
         cat(' | No FRE file available..')
         l.out.FRE.temp <- list()
       } else {
@@ -323,10 +326,8 @@ gdfpd.GetDFPData <- function(name.companies,
                                                  stringr::str_sub(my.filename,1,4), '_',
                                                  i.date, '.zip') )
 
-
-        dl.link <- temp.df.fca$dl.link
-
-
+        dl.link <- temp.df.fre$dl.link
+        version.fre.file <- temp.df.fre$version.file
 
         # do cache
         f.cache <- file.path(my.cache.dir,
@@ -345,6 +346,8 @@ gdfpd.GetDFPData <- function(name.companies,
             cat(' | file exists (no dl)')
           } else {
             cat(' | downloading file')
+
+            version.fre.file <- temp.df2$version.file
 
             dl.status <- gdfpd.download.file(dl.link = dl.link,
                                              dest.file = temp.file,
@@ -488,6 +491,8 @@ gdfpd.GetDFPData <- function(name.companies,
                                      company.segment = l.out.bov$company.segment,
                                      current.stockholders = list(l.out.bov$df.stock.holders),
                                      current.stock.composition = list(l.out.bov$df.stock.composition),
+                                     history.files = list(data.frame(version.dfp.file = version.dfp.file,
+                                                                     version.fre.file = version.fre.file)),
                                      fr.assets = list(l.out.DFP$df.assets),
                                      fr.liabilities = list(l.out.DFP$df.liabilities),
                                      fr.income = list(l.out.DFP$df.income),
@@ -516,7 +521,9 @@ gdfpd.GetDFPData <- function(name.companies,
                                      history.family.relations = list(l.out.FRE$df.family.relations),
                                      history.family.related.companies = list(l.out.FRE$df.family.related.companies),
                                      history.auditing = list(l.out.FRE$df.auditing),
-                                     history.responsible.docs = list(l.out.FRE$df.responsible.docs))
+                                     history.responsible.docs = list(l.out.FRE$df.responsible.docs),
+                                     history.stocks.details = list(l.out.FRE$df.stocks.details),
+                                     history.dividends.details = list(l.out.FRE$df.dividends.details) )
 
     # bind for final df
     suppressWarnings({

@@ -534,3 +534,56 @@ xml.fct.responsible <- function(x) {
   return(df.out)
 
 }
+
+#' Reads XML data for stock details
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.stocks.details <- function(x) {
+
+  df.out <- data.frame(type.stock.id = fix.fct(x$CodigoEspecieAcao),
+                       type.stock.text = fix.fct(x$DescricaoEspecieAcao),
+                       tag.along = fix.fct(x$PercentualTagAlong, type.info = 'numeric'),
+                       preferential.code = fix.fct(x$CodigoClasseAcaoPreferencial),
+                       preferential.text = fix.fct(x$DescricaoClasseAcaoPreferencial),
+                       divident.text = fix.fct(x$TextoDireitoDividendo),
+                       flag.voting.rights = fix.fct(x$IndicadorDireitoVoto),
+                       flag.voting.text = fix.fct(x$DescricaoIndicadorDireitoVoto),
+                       flag.conversibility = fix.fct(x$DescricaoIndicadorConversibilidade),
+                       other.info.text = fix.fct(x$DescricaoOutraCaracteristicaRelevante),
+                       stringsAsFactors = FALSE )
+
+  return(df.out)
+
+}
+
+#' Reads XML data for div details
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.div.details <- function(x) {
+
+  df.out <- data.frame(net.profit = fix.fct(x$LucroLiquido, type.info = 'numeric'),
+                       distributed.dividend = fix.fct(x$DividendoDistribuido, type.info = 'numeric'),
+                       retained.profit = fix.fct(x$LucroLiquidoRetido, type.info = 'numeric'),
+                       payout = fix.fct(x$PercentualDividendoDistribuido, type.info = 'numeric'),
+                       div.yeild.on.equity = fix.fct(x$TaxaRetorno, type.info = 'numeric'),
+                       stringsAsFactors = FALSE )
+
+  return(df.out)
+
+}
+
+xml.fct.div.details

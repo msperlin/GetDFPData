@@ -1,3 +1,8 @@
+### Version 1.0 (2018-08-27)
+
+- Fixed bug in values of reports due to previous update. 
+- Fixed bud in text of auditing reports
+
 ### Version 0.9 (2018-07-26)
 
 - Fixed thousands bug. Some small companies had nominal values, while the majority had it multiplied by thousands. The new code will divide by 1000 for the small companies. Any reported value in the DFP is always multiplied by thousands.

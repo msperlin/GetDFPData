@@ -95,12 +95,10 @@ gdfpd.read.dfp.zip.file <- function(my.zip.file,
 gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = tempdir()) {
 
   company.reg.file <- file.path(rnd.folder.name,'FormularioDemonstracaoFinanceiraDFP.xml')
-
   xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
 
 
   # get basic info
-
   company.name = xml_data$CompanhiaAberta$NomeRazaoSocialCompanhiaAberta
   company.cvm_code <- xml_data$CompanhiaAberta$CodigoCvm
   company.SeqNumber <- xml_data$CompanhiaAberta$NumeroSequencialRegistroCvm
@@ -112,16 +110,7 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
   utils::unzip(zipped.file, exdir = rnd.folder.name)
 
   # check wheter thousands  are used
-  fin.report.file <- file.path(rnd.folder.name, 'FormularioDemonstracaoFinanceiraDFP.xml')
-
-  if (!file.exists(fin.report.file)) {
-    stop('Cant find file', fin.report.file)
-  }
-
-  xml_data <- XML::xmlToList(XML::xmlParse(fin.report.file, encoding = 'UTF-8'))
-  file.remove(fin.report.file)
-
-  flag.thousands <- switch(xml_data$Documento$CodigoEscalaMoeda,
+  flag.thousands <- switch(xml_data$CodigoEscalaMoeda,
                            '2' = FALSE,
                            '1' = TRUE)
 

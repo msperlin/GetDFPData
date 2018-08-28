@@ -299,14 +299,29 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
 
   # get: responsible for documents
 
-  company.reg.file.1 <- file.path(rnd.folder.name, 'ResponsavelConteudoFormularioNegociosNovo.xml')
-  my.files <-  company.reg.file.1
-  company.reg.file <-my.files[file.exists(my.files)]
+  company.reg.file <- file.path(rnd.folder.name, 'ResponsavelConteudoFormularioNegociosNovo.xml')
 
   xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
 
   df.responsible.docs <- do.call(what = dplyr::bind_rows, lapply(xml_data, xml.fct.responsible ))
   rownames(df.responsible.docs) <- NULL
+
+  # get table 18.1 Valor mobiliarios
+  company.reg.file <- file.path(rnd.folder.name, 'DireitoClasseEspecieAcao.xml')
+
+  xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
+
+  df.stocks.details <- do.call(what = dplyr::bind_rows, lapply(xml_data, xml.fct.stocks.details ))
+  rownames(df.stocks.details) <- NULL
+
+  # get table 3.5 - dividends and payout
+  company.reg.file <- file.path(rnd.folder.name, 'InformacoesFinanceirasSelecionadas.xml')
+
+  xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
+  xml_data <- xml_data[1]
+
+  df.dividends.details <- do.call(what = dplyr::bind_rows, lapply(xml_data, xml.fct.div.details ))
+  rownames(df.dividends.details) <- NULL
 
   # save output
 
@@ -327,7 +342,9 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
                df.family.relations = df.family.relations,
                df.family.related.companies = df.family.related.companies,
                df.auditing = df.auditing,
-               df.responsible.docs = df.responsible.docs)
+               df.responsible.docs = df.responsible.docs,
+               df.stocks.details = df.stocks.details,
+               df.dividends.details  = df.dividends.details)
 
   return(my.l)
 }
