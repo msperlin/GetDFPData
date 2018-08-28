@@ -10,6 +10,7 @@
 #' Names of companies can be found using function gdfpd.search.company('nametolookfor') or gdfpd.get.info.companies('companies')
 #' @param first.date First date (YYYY-MM-DD) to get data. Character or Date. E.g. first.date = '2010-01-01'.
 #' @param last.date Last date (YYYY-MM-DD) to get data. Character or Date. E.g. last.date = '2017-01-01'.
+#' @param selected.data Symbols for the selection of datasets: 'DFP|FRE|FCA', 'DFP|FRE', 'FRE|FCA', 'DFP|FCA', 'DFP', 'FRE', 'FCA'. Default = 'DFP|FRE|FCA'
 #' @param inflation.index Sets the inflation index to use for finding inflation adjusted values of all reports. Possible values: 'dollar' (default) or 'IPCA', the brazilian main inflation index.
 #' When using 'IPCA', the base date is set as the last date found in the DFP dataset.
 #' @param max.levels Sets the maximum number of levels of accounting items in financial reports (default = 3)
@@ -36,6 +37,7 @@
 gdfpd.GetDFPData <- function(name.companies,
                              first.date = Sys.Date()-12*30,
                              last.date = Sys.Date(),
+                             selected.data = 'DFP|FRE|FCA',
                              inflation.index = 'dollar',
                              max.levels = 3,
                              folder.out = tempdir(),
@@ -70,12 +72,20 @@ gdfpd.GetDFPData <- function(name.companies,
     stop('You need an active internet connection to download files from Bovespa.')
   }
 
+  possible.values <- c('DFP|FRE|FCA', 'DFP|FRE', 'FRE|FCA', 'DFP|FCA', 'DFP', 'FRE', 'FCA')
+  if ( !(any(selected.data %in% possible.values)) ) {
+    stop(paste0('Input selected.data should be one of:\n' , paste0(possible.values, collapse = '\n') ) )
+  }
+
+  # parse selected data
+  do.dfp <- stringr::str_detect(selected.data, 'DFP')
+  do.fre <- stringr::str_detect(selected.data, 'FRE')
+  do.fca <- stringr::str_detect(selected.data, 'FCA')
+
   # get data from github
 
 
   if (!fetch.new.files ) {
-
-
 
     df.info <- gdfpd.get.info.companies(type.data = 'companies_files',
                                         cache.folder = cache.folder)
@@ -266,88 +276,27 @@ gdfpd.GetDFPData <- function(name.companies,
                                                stringr::str_sub(my.filename,1,4), '_',
                                                i.date, '.zip') )
 
+      if (do.dfp) { # DO DFP
 
-      cat(paste0('\n\t\tAcessing DFP data') )
-
-      # do cache
-      f.cache <- file.path(my.cache.dir,
-                           paste0('GetDFPData_DFP_cache_',
-                                  my.id,'_',
-                                  stringr::str_sub(i.company, 1,4), '_',
-                                  i.date, '.rds'))
-
-      if (file.exists(f.cache)&(do.cache)) {
-        cat(paste0(' | Found DFP cache file') )
-
-        l.out.DFP.temp <- readRDS(f.cache)
-      } else {
-
-        if (file.exists(temp.file)) {
-          cat(' | file exists (no dl)')
-        } else {
-          cat(' | downloading file')
-
-          dl.status <- gdfpd.download.file(dl.link = dl.link,
-                                           dest.file = temp.file,
-                                           max.dl.tries = max.dl.tries)
-        }
-
-        cat(' | reading file')
-
-        suppressWarnings({
-          l.out.DFP.temp <- gdfpd.read.dfp.zip.file(my.zip.file = temp.file, folder.to.unzip = tempdir(),
-                                                    id.type = temp.df2$id.type)
-
-        })
-
-        cat(' | saving cache')
-
-        if (do.cache) {
-          saveRDS(object = l.out.DFP.temp, file = f.cache)
-        }
-      }
-
-      # get data from FRE
-
-      cat(paste0('\n\t\tAcessing FRE data') )
-
-      idx <- (df.to.process$name.company == i.company)&
-        (df.to.process$type.fin.report == 'fre')&
-        (format(df.to.process$id.date, '%Y') == format(temp.df2$id.date, '%Y'))
-
-      temp.df.fre <- df.to.process[idx,  ]
-
-      if (nrow(temp.df.fre) == 0) {
-        cat(' | No FRE file available..')
-        l.out.FRE.temp <- list()
-      } else {
-
-        temp.file = file.path(folder.out, paste0('FRE_', temp.df2$id.company, '_',
-                                                 stringr::str_sub(my.filename,1,4), '_',
-                                                 i.date, '.zip') )
-
-        dl.link <- temp.df.fre$dl.link
-        version.fre.file <- temp.df.fre$version.file
+        cat(paste0('\n\t\tAcessing DFP data') )
 
         # do cache
         f.cache <- file.path(my.cache.dir,
-                             paste0('GetDFPData_FRE_cache_',
+                             paste0('GetDFPData_DFP_cache_',
                                     my.id,'_',
                                     stringr::str_sub(i.company, 1,4), '_',
                                     i.date, '.rds'))
 
-        if (file.exists(f.cache)) {
-          cat(paste0(' | Found FRE cache file') )
+        if (file.exists(f.cache)&(do.cache)) {
+          cat(paste0(' | Found DFP cache file') )
 
-          l.out.FRE.temp <- readRDS(f.cache)
+          l.out.DFP.temp <- readRDS(f.cache)
         } else {
 
           if (file.exists(temp.file)) {
             cat(' | file exists (no dl)')
           } else {
             cat(' | downloading file')
-
-            version.fre.file <- temp.df2$version.file
 
             dl.status <- gdfpd.download.file(dl.link = dl.link,
                                              dest.file = temp.file,
@@ -357,76 +306,150 @@ gdfpd.GetDFPData <- function(name.companies,
           cat(' | reading file')
 
           suppressWarnings({
-            l.out.FRE.temp <- gdfpd.read.fre.zip.file(my.zip.file = temp.file,
-                                                      folder.to.unzip = tempdir())
+            l.out.DFP.temp <- gdfpd.read.dfp.zip.file(my.zip.file = temp.file, folder.to.unzip = tempdir(),
+                                                      id.type = temp.df2$id.type)
 
           })
 
           cat(' | saving cache')
 
-          saveRDS(object = l.out.FRE.temp, file = f.cache)
+          if (do.cache) {
+            saveRDS(object = l.out.DFP.temp, file = f.cache)
+          }
         }
+      } else {
+        l.out.DFP.temp <- list()
+      }
+      # get data from FRE
+
+      if (do.fre) {
+        cat(paste0('\n\t\tAcessing FRE data') )
+
+        idx <- (df.to.process$name.company == i.company)&
+          (df.to.process$type.fin.report == 'fre')&
+          (format(df.to.process$id.date, '%Y') == format(temp.df2$id.date, '%Y'))
+
+        temp.df.fre <- df.to.process[idx,  ]
+
+        if (nrow(temp.df.fre) == 0) {
+          cat(' | No FRE file available..')
+          l.out.FRE.temp <- list()
+        } else {
+
+          temp.file = file.path(folder.out, paste0('FRE_', temp.df2$id.company, '_',
+                                                   stringr::str_sub(my.filename,1,4), '_',
+                                                   i.date, '.zip') )
+
+          dl.link <- temp.df.fre$dl.link
+          version.fre.file <- temp.df.fre$version.file
+
+          # do cache
+          f.cache <- file.path(my.cache.dir,
+                               paste0('GetDFPData_FRE_cache_',
+                                      my.id,'_',
+                                      stringr::str_sub(i.company, 1,4), '_',
+                                      i.date, '.rds'))
+
+          if (file.exists(f.cache)) {
+            cat(paste0(' | Found FRE cache file') )
+
+            l.out.FRE.temp <- readRDS(f.cache)
+          } else {
+
+            if (file.exists(temp.file)) {
+              cat(' | file exists (no dl)')
+            } else {
+              cat(' | downloading file')
+
+              version.fre.file <- temp.df2$version.file
+
+              dl.status <- gdfpd.download.file(dl.link = dl.link,
+                                               dest.file = temp.file,
+                                               max.dl.tries = max.dl.tries)
+            }
+
+            cat(' | reading file')
+
+            suppressWarnings({
+              l.out.FRE.temp <- gdfpd.read.fre.zip.file(my.zip.file = temp.file,
+                                                        folder.to.unzip = tempdir())
+
+            })
+
+            cat(' | saving cache')
+
+            saveRDS(object = l.out.FRE.temp, file = f.cache)
+          }
+        }
+      } else {
+        l.out.FRE.temp <- list()
+        version.fre.file <- NA
       }
 
       # get data from FCA
 
-      cat(paste0('\n\t\tAcessing FCA data') )
+      if (do.fca) {
 
-      idx <- (df.to.process$name.company == i.company)&
-        (df.to.process$type.fin.report == 'fca')&
-        (format(df.to.process$id.date, '%Y') == format(temp.df2$id.date, '%Y'))
+        cat(paste0('\n\t\tAcessing FCA data') )
 
-      temp.df.fre <- df.to.process[idx,  ]
+        idx <- (df.to.process$name.company == i.company)&
+          (df.to.process$type.fin.report == 'fca')&
+          (format(df.to.process$id.date, '%Y') == format(temp.df2$id.date, '%Y'))
 
-      if (nrow(temp.df.fre) == 0) {
-        cat(' | No FCA file available..')
-        l.out.FCA.temp <- list()
-      } else {
+        temp.df.fre <- df.to.process[idx,  ]
 
-        temp.file = file.path(folder.out, paste0('FCA_', temp.df2$id.company, '_',
-                                                 stringr::str_sub(my.filename,1,4), '_',
-                                                 i.date, '.zip') )
-
-
-        dl.link <- temp.df.fre$dl.link
-
-
-
-        # do cache
-        f.cache <- file.path(my.cache.dir,
-                             paste0('GetDFPData_FCA_cache_',
-                                    my.id,'_',
-                                    stringr::str_sub(i.company, 1,4), '_',
-                                    i.date, '.rds'))
-
-        if (file.exists(f.cache)) {
-          cat(paste0(' | Found FCA cache file') )
-
-          l.out.FCA.temp <- readRDS(f.cache)
+        if (nrow(temp.df.fre) == 0) {
+          cat(' | No FCA file available..')
+          l.out.FCA.temp <- list()
         } else {
 
-          if (file.exists(temp.file)) {
-            cat(' | file exists (no dl)')
+          temp.file = file.path(folder.out, paste0('FCA_', temp.df2$id.company, '_',
+                                                   stringr::str_sub(my.filename,1,4), '_',
+                                                   i.date, '.zip') )
+
+
+          dl.link <- temp.df.fre$dl.link
+
+
+
+          # do cache
+          f.cache <- file.path(my.cache.dir,
+                               paste0('GetDFPData_FCA_cache_',
+                                      my.id,'_',
+                                      stringr::str_sub(i.company, 1,4), '_',
+                                      i.date, '.rds'))
+
+          if (file.exists(f.cache)) {
+            cat(paste0(' | Found FCA cache file') )
+
+            l.out.FCA.temp <- readRDS(f.cache)
           } else {
-            cat(' | downloading file')
 
-            dl.status <- gdfpd.download.file(dl.link = dl.link,
-                                             dest.file = temp.file,
-                                             max.dl.tries = max.dl.tries)
+            if (file.exists(temp.file)) {
+              cat(' | file exists (no dl)')
+            } else {
+              cat(' | downloading file')
+
+              dl.status <- gdfpd.download.file(dl.link = dl.link,
+                                               dest.file = temp.file,
+                                               max.dl.tries = max.dl.tries)
+            }
+
+            cat(' | reading file')
+
+            suppressWarnings({
+              l.out.FCA.temp <- gdfpd.read.fca.zip.file(my.zip.file = temp.file,
+                                                        folder.to.unzip = tempdir())
+
+            })
+
+            cat(' | saving cache')
+
+            saveRDS(object = l.out.FCA.temp, file = f.cache)
           }
-
-          cat(' | reading file')
-
-          suppressWarnings({
-            l.out.FCA.temp <- gdfpd.read.fca.zip.file(my.zip.file = temp.file,
-                                                      folder.to.unzip = tempdir())
-
-          })
-
-          cat(' | saving cache')
-
-          saveRDS(object = l.out.FCA.temp, file = f.cache)
         }
+      } else {
+        l.out.FCA.temp <- list()
       }
 
       # fix all dfs

@@ -5,10 +5,10 @@
 \title{Downloads and reads financial reports from B3's DFP/FRE/FCA system}
 \usage{
 gdfpd.GetDFPData(name.companies, first.date = Sys.Date() - 12 * 30,
-  last.date = Sys.Date(), inflation.index = "dollar", max.levels = 3,
-  folder.out = tempdir(), do.cache = TRUE,
-  cache.folder = "DFP Cache Folder", fetch.new.files = FALSE,
-  max.dl.tries = 10)
+  last.date = Sys.Date(), selected.data = "DFP|FRE|FCA",
+  inflation.index = "dollar", max.levels = 3, folder.out = tempdir(),
+  do.cache = TRUE, cache.folder = "DFP Cache Folder",
+  fetch.new.files = FALSE, max.dl.tries = 10)
 }
 \arguments{
 \item{name.companies}{Official names of companies to get financial reports (e.g. 'ELETROPAULO METROPOLITANA EL.S.PAULO S.A').
@@ -17,6 +17,8 @@ Names of companies can be found using function gdfpd.search.company('nametolookf
 \item{first.date}{First date (YYYY-MM-DD) to get data. Character or Date. E.g. first.date = '2010-01-01'.}
 
 \item{last.date}{Last date (YYYY-MM-DD) to get data. Character or Date. E.g. last.date = '2017-01-01'.}
+
+\item{selected.data}{Symbols for the selection of datasets: 'DFP|FRE|FCA', 'DFP|FRE', 'FRE|FCA', 'DFP|FCA', 'DFP', 'FRE', 'FCA'. Default = 'DFP|FRE|FCA'}
 
 \item{inflation.index}{Sets the inflation index to use for finding inflation adjusted values of all reports. Possible values: 'dollar' (default) or 'IPCA', the brazilian main inflation index.
 When using 'IPCA', the base date is set as the last date found in the DFP dataset.}

@@ -1,7 +1,11 @@
-### Version 1.0 (2018-08-27)
+### Version 1.0 (2018-08-28)
 
 - Fixed bug in values of reports due to previous update. 
-- Fixed bud in text of auditing reports
+- Fixed bug in text of auditing reports
+- Added tables 3.5 (payout e dividendos)
+- Added table 15.3 (distribuição capital)
+- Added table 18.1 (detalhes ações)
+- Added choice for different data systems (DFP/FRE/FCA)
 
 ### Version 0.9 (2018-07-26)
 
