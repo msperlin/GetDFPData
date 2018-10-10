@@ -1,3 +1,7 @@
+### Version 1.1 (2018-10-10)
+
+- Fixed bug in thousands flag for DFP data before 2007
+
 ### Version 1.0 (2018-08-28)
 
 - Fixed bug in values of reports due to previous update. 
