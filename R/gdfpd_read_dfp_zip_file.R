@@ -269,12 +269,16 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
 
   # figure out flag.thousands
   fin.report.file <- file.path(rnd.folder.name, 'CONFIG.XML')
-  xml_data <- XML::xmlToList(XML::xmlParse(fin.report.file, encoding = 'UTF-8'))
-  flag.thousands <- switch(xml_data$ROWDATA$ROW['MOEDA'],
-                           '02' = FALSE,
-                           '01' = TRUE)
-
-
+  
+  if (!file.exists(fin.report.file)) {
+    flag.thousands = TRUE
+  } else {
+    xml_data <- XML::xmlToList(XML::xmlParse(fin.report.file, encoding = 'UTF-8'))
+    flag.thousands <- switch(xml_data$ROWDATA$ROW['MOEDA'],
+                             '02' = FALSE,
+                             '01' = TRUE)
+  }
+  
   my.f <- list.files(rnd.folder.name,'DFPBPA', full.names = T)[1]
   df.assets <- gdfpd.read.fwf.file(my.f, flag.thousands)
 
