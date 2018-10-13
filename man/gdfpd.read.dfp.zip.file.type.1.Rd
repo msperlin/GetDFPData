@@ -4,8 +4,7 @@
 \alias{gdfpd.read.dfp.zip.file.type.1}
 \title{Reads folder for zip file post 2011 (internal)}
 \usage{
-gdfpd.read.dfp.zip.file.type.1(rnd.folder.name,
-  folder.to.unzip = tempdir())
+gdfpd.read.dfp.zip.file.type.1(rnd.folder.name, folder.to.unzip = tempdir())
 }
 \arguments{
 \item{rnd.folder.name}{Folder where unzipped files are available}
