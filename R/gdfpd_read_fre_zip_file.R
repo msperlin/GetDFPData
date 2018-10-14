@@ -206,16 +206,29 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
   company.reg.file <- file.path(rnd.folder.name,'RemuneracaoReconhecidaAdministradores.xml')
   xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
 
+  idx.periods <- as.numeric(sapply(xml_data,
+                                   function(x) return(x$DatasExerciciosSociais$NumeroExercicioSocial)) )
+
+  # index 2  seems to be the magic number for the remuneration data for related year
+  # it seems this data gets updated over time
+  xml_data <- xml_data[which(idx.periods == 2)]
+
   df.compensation <- do.call(what = rbind,
                              lapply(xml_data[[1]]$RemuneracaoReconhecidaOrgao,
                                     xml.fct.compensation))
   rownames(df.compensation) <- NULL
 
   # get compensation summary
+
   company.reg.file <- file.path(rnd.folder.name,'RemuneracaoOrgaos.xml')
   xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
 
-  df.compensation.summary <- do.call(what = rbind, lapply(xml_data[1:3], xml.fct.compensation.summary))
+  idx.periods <- as.numeric(sapply(xml_data,
+                        function(x) return(x$DatasExerciciosSociais$NumeroExercicioSocial)) )
+
+  # here I use the minimum index.. seems to be 2 again..
+  xml_data <- xml_data[which(idx.periods == min(idx.periods))]
+  df.compensation.summary <- do.call(what = rbind, lapply(xml_data, xml.fct.compensation.summary))
   rownames(df.compensation.summary) <- NULL
 
   # get: transactions related parts

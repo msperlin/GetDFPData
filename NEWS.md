@@ -1,3 +1,7 @@
+### Version 1.2 (2018-10-11)
+
+- Fixed [https://github.com/msperlin/GetDFPData/issues/8](issue 8)
+
 ### Version 1.1 (2018-10-10)
 
 - Fixed bug in thousands flag for DFP data before 2007
