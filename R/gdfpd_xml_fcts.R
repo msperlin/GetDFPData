@@ -43,6 +43,8 @@ fix.fct <- function(x, type.info = 'character') {
 #' # No example (INTERNAL)
 xml.fct.compensation <- function(x) {
 
+  x <- x$RemuneracaoReconhecidaOrgao$RemuneracaoReconhecidaOrgao
+
   df.out <- data.frame(level.remuneration = switch(fix.fct(x$CodigoOrgaoAdministrador),
                                                    '0' = NA,
                                                    '1' = 'Management Council',

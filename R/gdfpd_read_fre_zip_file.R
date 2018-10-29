@@ -214,7 +214,7 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
   xml_data <- xml_data[which(idx.periods == 2)]
 
   df.compensation <- do.call(what = rbind,
-                             lapply(xml_data[[1]]$RemuneracaoReconhecidaOrgao,
+                             lapply(xml_data,
                                     xml.fct.compensation))
   rownames(df.compensation) <- NULL
 
