@@ -1,6 +1,10 @@
+## Version 1.3 (2018-11-26)
+
+- Fixed [issue 11](https://github.com/msperlin/GetDFPData/issues/11), bug in download of files from cvm
+
 ## Version 1.2 (2018-10-11)
 
-- Fixed [https://github.com/msperlin/GetDFPData/issues/8](issue 8), bug in remuneration data
+- Fixed [issue 8](https://github.com/msperlin/GetDFPData/issues/8), bug in remuneration data
 
 ## Version 1.1 (2018-10-10)
 
