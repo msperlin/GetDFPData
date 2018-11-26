@@ -170,11 +170,14 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
   df.liabilities <- stats::na.omit(ind.df[stringr::str_sub(ind.df$acc.number,1,1) == '2', ])
   df.income    <- stats::na.omit(ind.df[stringr::str_sub(ind.df$acc.number,1,1) == '3', ])
   df.cashflow    <- stats::na.omit(ind.df[stringr::str_sub(ind.df$acc.number,1,1) == '6', ])
+  df.value <- stats::na.omit(ind.df[stringr::str_sub(ind.df$acc.number,1,1) == '7', ])
+
 
   l.individual.dfs <- list(df.assets = df.assets,
                            df.liabilities = df.liabilities,
                            df.income = df.income,
-                           df.cashflow = df.cashflow)
+                           df.cashflow = df.cashflow,
+                           df.value = df.value)
 
   # get consolidated dfs
   type.df <- 'consolidated'
@@ -189,11 +192,14 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
   df.liabilities.cons <- stats::na.omit(consolidated.df[stringr::str_sub(consolidated.df$acc.number,1,1) == '2', ])
   df.income.cons    <- stats::na.omit(consolidated.df[stringr::str_sub(consolidated.df$acc.number,1,1) == '3', ])
   df.cashflow.cons    <- stats::na.omit(consolidated.df[stringr::str_sub(consolidated.df$acc.number,1,1) == '6', ])
+  df.value.cons    <- stats::na.omit(consolidated.df[stringr::str_sub(consolidated.df$acc.number,1,1) == '7', ])
+
 
   l.consolidated.dfs <- list(df.assets = df.assets,
                              df.liabilities = df.liabilities,
                              df.income = df.income,
-                             df.cashflow = df.cashflow)
+                             df.cashflow = df.cashflow,
+                             df.value = df.value)
 
   # auditing report
 
@@ -246,10 +252,12 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
                df.liabilities = df.liabilities,
                df.income = df.income,
                df.cashflow = df.cashflow,
+               df.value = df.value,
                df.assets.cons = df.assets.cons,
                df.liabilities.cons = df.liabilities.cons,
                df.income.cons = df.income.cons,
                df.cashflow.cons = df.cashflow.cons,
+               df.value.cons = df.value.cons,
                df.auditing.report = df.auditing.report)
 
 
@@ -269,7 +277,7 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
 
   # figure out flag.thousands
   fin.report.file <- file.path(rnd.folder.name, 'CONFIG.XML')
-  
+
   if (!file.exists(fin.report.file)) {
     flag.thousands = TRUE
   } else {
@@ -278,7 +286,7 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
                              '02' = FALSE,
                              '01' = TRUE)
   }
-  
+
   my.f <- list.files(rnd.folder.name,'DFPBPA', full.names = T)[1]
   df.assets <- gdfpd.read.fwf.file(my.f, flag.thousands)
 
@@ -287,6 +295,9 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
 
   my.f <- list.files(rnd.folder.name, 'DFPDERE', full.names = T)[1]
   df.income <- gdfpd.read.fwf.file(my.f, flag.thousands)
+
+  my.f <- list.files(rnd.folder.name, 'DFPDVAE', full.names = T)[1]
+  df.value <- gdfpd.read.fwf.file(my.f, flag.thousands)
 
 
   my.f <- list.files(rnd.folder.name, 'DFPDFCE', full.names = T)
@@ -302,7 +313,8 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
   l.individual.dfs <- list(df.assets = df.assets,
                            df.liabilities = df.liabilities,
                            df.income = df.income,
-                           df.cashflow = df.cashflow)
+                           df.cashflow = df.cashflow,
+                           df.value = df.value)
 
   # get consolidated fin statements
 
@@ -317,6 +329,8 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
   my.f <- list.files(rnd.folder.name,'DFPCDER', full.names = T)[1]
   df.income.cons <- gdfpd.read.fwf.file(my.f, flag.thousands)
 
+  my.f <- list.files(rnd.folder.name, 'DFPCDVAE', full.names = T)[1]
+  df.value.cons <- gdfpd.read.fwf.file(my.f, flag.thousands)
 
   my.f <- list.files(rnd.folder.name,'DFPCDFCE', full.names = T)
 
@@ -331,7 +345,8 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
   l.consolidated.dfs<- list(df.assets = df.assets,
                             df.liabilities = df.liabilities,
                             df.income = df.income,
-                            df.cashflow = df.cashflow)
+                            df.cashflow = df.cashflow,
+                            df.value = df.value)
 
   # auditing report
 
@@ -343,10 +358,12 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
                df.liabilities = df.liabilities,
                df.income = df.income,
                df.cashflow = df.cashflow,
+               df.value = df.value,
                df.assets.cons = df.assets.cons,
                df.liabilities.cons = df.liabilities.cons,
                df.income.cons = df.income.cons,
                df.cashflow.cons = df.cashflow.cons,
+               df.value.cons = df.value.cons,
                df.auditing.report = df.auditing.report)
 
 
