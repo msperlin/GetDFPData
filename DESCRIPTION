@@ -13,7 +13,7 @@ License: GPL-2
 BugReports: https://github.com/msperlin/GetDFPData/issues
 URL: https://github.com/msperlin/GetDFPData/
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Suggests: knitr,
     rmarkdown,
     testthat,
