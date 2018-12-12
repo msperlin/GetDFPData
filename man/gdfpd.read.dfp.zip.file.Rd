@@ -4,7 +4,8 @@
 \alias{gdfpd.read.dfp.zip.file}
 \title{Reads a single zip file downloaded from Bovespa}
 \usage{
-gdfpd.read.dfp.zip.file(my.zip.file, folder.to.unzip = tempdir(), id.type)
+gdfpd.read.dfp.zip.file(my.zip.file, folder.to.unzip = tempdir(),
+  id.type)
 }
 \arguments{
 \item{my.zip.file}{Full path to zip file}

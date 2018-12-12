@@ -271,9 +271,12 @@ gdfpd.GetDFPData <- function(name.companies,
       my.filename <- iconv(temp.df2$name.company, to = 'ASCII//TRANSLIT')
       my.filename <- stringr::str_replace_all(my.filename, stringr::fixed('?'), '_')
 
+      temp.df2$id.file
       temp.file = file.path(folder.out, paste0('DFP_',
                                                temp.df2$id.company, '_',
                                                stringr::str_sub(my.filename,1,4), '_',
+                                               'idfile_', temp.df2$id.file, '_',
+                                               'verfile_', temp.df2$version.file, '_',
                                                i.date, '.zip') )
 
       if (do.dfp) { # DO DFP
@@ -336,7 +339,10 @@ gdfpd.GetDFPData <- function(name.companies,
           l.out.FRE.temp <- list()
         } else {
 
-          temp.file = file.path(folder.out, paste0('FRE_', temp.df2$id.company, '_',
+          temp.file = file.path(folder.out, paste0('FRE_',
+                                                   stringr::str_sub(my.filename,1,4), '_',
+                                                   'idfile_', temp.df2$id.file, '_',
+                                                   'verfile_', temp.df2$version.file, '_',
                                                    stringr::str_sub(my.filename,1,4), '_',
                                                    i.date, '.zip') )
 
@@ -346,8 +352,9 @@ gdfpd.GetDFPData <- function(name.companies,
           # do cache
           f.cache <- file.path(my.cache.dir,
                                paste0('GetDFPData_FRE_cache_',
-                                      my.id,'_',
-                                      stringr::str_sub(i.company, 1,4), '_',
+                                      'idfile_', temp.df2$id.file, '_',
+                                      'verfile_', temp.df2$version.file, '_',
+                                      stringr::str_sub(my.filename,1,4), '_',
                                       i.date, '.rds'))
 
           if (file.exists(f.cache)) {
@@ -403,7 +410,9 @@ gdfpd.GetDFPData <- function(name.companies,
           l.out.FCA.temp <- list()
         } else {
 
-          temp.file = file.path(folder.out, paste0('FCA_', temp.df2$id.company, '_',
+          temp.file = file.path(folder.out, paste0('FCA_', stringr::str_sub(my.filename,1,4), '_',
+                                                   'idfile_', temp.df2$id.file, '_',
+                                                   'verfile_', temp.df2$version.file, '_',
                                                    stringr::str_sub(my.filename,1,4), '_',
                                                    i.date, '.zip') )
 
@@ -415,8 +424,9 @@ gdfpd.GetDFPData <- function(name.companies,
           # do cache
           f.cache <- file.path(my.cache.dir,
                                paste0('GetDFPData_FCA_cache_',
-                                      my.id,'_',
-                                      stringr::str_sub(i.company, 1,4), '_',
+                                      'idfile_', temp.df2$id.file, '_',
+                                      'verfile_', temp.df2$version.file, '_',
+                                      stringr::str_sub(my.filename,1,4), '_',
                                       i.date, '.rds'))
 
           if (file.exists(f.cache)) {
