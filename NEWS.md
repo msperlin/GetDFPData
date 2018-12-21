@@ -1,3 +1,8 @@
+## Version 1.4 (2018-12-21)
+
+- Naming conventions for caching system are improved so that it reflects different versions of FRE and DFP files. 
+- Fixed issue with dates in FRE. A new column "year.fre" is added to all FRE data. This makes sure where the FRE datasets are coming from. The "ref.date" column is set as (year.fre -1)-12-31.
+
 ## Version 1.3 (2018-11-26)
 
 - Fixed [issue 11](https://github.com/msperlin/GetDFPData/issues/11), bug in download of files from cvm

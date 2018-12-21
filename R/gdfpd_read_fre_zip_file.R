@@ -141,7 +141,6 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
 
   }
 
-
   # market value of company
   company.reg.file <- file.path(rnd.folder.name,'CotacaoValoresMobiliarios.xml')
   xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))

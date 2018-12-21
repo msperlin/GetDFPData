@@ -204,7 +204,7 @@ gdfpd.download.file <- function(dl.link, dest.file, max.dl.tries) {
 }
 
 # set new cols, remove duplicate information and fix order
-my.fix.cols <- function(df.in, name.company, ref.date ) {
+my.fix.cols <- function(df.in, name.company, ref.date, do.fre.register = FALSE) {
 
   if (is.null(df.in)) {
     #df.in <- data.frame(flag.NODATA = TRUE)
@@ -235,6 +235,12 @@ my.fix.cols <- function(df.in, name.company, ref.date ) {
     }
 
     return(col.in)
+  }
+
+  if (do.fre.register) {
+    # make sure that the dates in FRE are explicit in dataset
+    df.in <- tibble::add_column(.data = df.in, year.fre = lubridate::year(ref.date) + 1,
+                                .after = 'ref.date')
   }
 
   df.in <- as.data.frame(lapply(X = df.in, my.fct), stringsAsFactors = FALSE)

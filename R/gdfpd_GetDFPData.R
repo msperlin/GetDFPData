@@ -194,12 +194,13 @@ gdfpd.GetDFPData <- function(name.companies,
 
   for (i.company in unique(df.to.process$name.company)) {
 
-    # filter data
-    idx <- (df.to.process$name.company == i.company)&
-      (df.to.process$type.fin.report == 'dfp')
-    temp.df <- df.to.process[idx,  ]
+    # filter data (dfp&fre&fca)
+    idx <- (df.to.process$name.company == i.company) &
+      (df.to.process$type.fin.report != 'itr')
 
-    my.id <- temp.df$id.company[1]
+    company.df <- df.to.process[idx,  ]
+
+    my.id <- company.df$id.company[1]
     cat(paste0('\nProcessing ', my.id, ' - ',  i.company) )
 
     # get data from Bovespa site
@@ -250,34 +251,36 @@ gdfpd.GetDFPData <- function(name.companies,
     l.out.DFP <- list()
     l.out.FRE <- list()
     l.out.FCA <- list()
-    for (i.date in as.character(temp.df$id.date) ) {
+    for (i.date in as.character(company.df$id.date) ) {
 
-      temp.df2 <- temp.df[temp.df$id.date == i.date,  ]
+      #browser()
+
+      idx <- (company.df$id.date == i.date)&(company.df$type.fin.report == 'dfp')
+      temp.df.dfp <- company.df[idx,  ]
 
       # cases for more than one file per quarter
-      if (nrow(temp.df2)> 1) {
+      if (nrow(temp.df.dfp)> 1) {
         # find id with highest value (most recent file)
-        temp.df2 <- temp.df2[which.max(temp.df2$id.file), ]
+        temp.df.dfp <- temp.df.dfp[which.max(temp.df.dfp$id.file), ]
       }
 
       cat(paste0('\n\tProcessing ', my.id, ' - ', i.company, ' | date ', i.date  ) )
 
-      version.dfp.file <- temp.df2$version.file
-
+      version.dfp.file <- temp.df.dfp$version.file
       # get dfp data
-      dl.link <- temp.df2$dl.link
+      dl.link <- temp.df.dfp$dl.link
 
       # fix file names for latin characters
-      my.filename <- iconv(temp.df2$name.company, to = 'ASCII//TRANSLIT')
+      my.filename <- iconv(temp.df.dfp$name.company, to = 'ASCII//TRANSLIT')
       my.filename <- stringr::str_replace_all(my.filename, stringr::fixed('?'), '_')
 
-      temp.df2$id.file
       temp.file = file.path(folder.out, paste0('DFP_',
-                                               temp.df2$id.company, '_',
                                                stringr::str_sub(my.filename,1,4), '_',
-                                               'idfile_', temp.df2$id.file, '_',
-                                               'verfile_', temp.df2$version.file, '_',
-                                               i.date, '.zip') )
+                                               temp.df.dfp$id.company, '_',
+                                               i.date, '_',
+                                               'idfile_', temp.df.dfp$id.file, '_',
+                                               'verfile_', temp.df.dfp$version.file,
+                                                '.zip') )
 
       if (do.dfp) { # DO DFP
 
@@ -286,9 +289,12 @@ gdfpd.GetDFPData <- function(name.companies,
         # do cache
         f.cache <- file.path(my.cache.dir,
                              paste0('GetDFPData_DFP_cache_',
-                                    my.id,'_',
-                                    stringr::str_sub(i.company, 1,4), '_',
-                                    i.date, '.rds'))
+                                    stringr::str_sub(my.filename,1,4), '_',
+                                    temp.df.dfp$id.company, '_',
+                                    i.date, '_',
+                                    'idfile_', temp.df.dfp$id.file, '_',
+                                    'verfile_', temp.df.dfp$version.file,
+                                    '.rds'))
 
         if (file.exists(f.cache)&(do.cache)) {
           cat(paste0(' | Found DFP cache file') )
@@ -310,7 +316,7 @@ gdfpd.GetDFPData <- function(name.companies,
 
           suppressWarnings({
             l.out.DFP.temp <- gdfpd.read.dfp.zip.file(my.zip.file = temp.file, folder.to.unzip = tempdir(),
-                                                      id.type = temp.df2$id.type)
+                                                      id.type = temp.df.dfp$id.type)
 
           })
 
@@ -328,11 +334,8 @@ gdfpd.GetDFPData <- function(name.companies,
       if (do.fre) {
         cat(paste0('\n\t\tAcessing FRE data') )
 
-        idx <- (df.to.process$name.company == i.company)&
-          (df.to.process$type.fin.report == 'fre')&
-          (format(df.to.process$id.date, '%Y') == format(temp.df2$id.date, '%Y'))
-
-        temp.df.fre <- df.to.process[idx,  ]
+        idx <- (company.df$id.date == i.date)&(company.df$type.fin.report == 'fre')
+        temp.df.fre <- company.df[idx,  ]
 
         if (nrow(temp.df.fre) == 0) {
           cat(' | No FRE file available..')
@@ -341,10 +344,11 @@ gdfpd.GetDFPData <- function(name.companies,
 
           temp.file = file.path(folder.out, paste0('FRE_',
                                                    stringr::str_sub(my.filename,1,4), '_',
-                                                   'idfile_', temp.df2$id.file, '_',
-                                                   'verfile_', temp.df2$version.file, '_',
-                                                   stringr::str_sub(my.filename,1,4), '_',
-                                                   i.date, '.zip') )
+                                                   temp.df.fre$id.company, '_',
+                                                   i.date, '_',
+                                                   'idfile_', temp.df.fre$id.file, '_',
+                                                   'verfile_', temp.df.fre$version.file,
+                                                   '.zip') )
 
           dl.link <- temp.df.fre$dl.link
           version.fre.file <- temp.df.fre$version.file
@@ -352,10 +356,12 @@ gdfpd.GetDFPData <- function(name.companies,
           # do cache
           f.cache <- file.path(my.cache.dir,
                                paste0('GetDFPData_FRE_cache_',
-                                      'idfile_', temp.df2$id.file, '_',
-                                      'verfile_', temp.df2$version.file, '_',
                                       stringr::str_sub(my.filename,1,4), '_',
-                                      i.date, '.rds'))
+                                      temp.df.fre$id.company, '_',
+                                      i.date, '_',
+                                      'idfile_', temp.df.fre$id.file, '_',
+                                      'verfile_', temp.df.fre$version.file,
+                                      '.rds') )
 
           if (file.exists(f.cache)) {
             cat(paste0(' | Found FRE cache file') )
@@ -368,7 +374,7 @@ gdfpd.GetDFPData <- function(name.companies,
             } else {
               cat(' | downloading file')
 
-              version.fre.file <- temp.df2$version.file
+              version.fre.file <- temp.df.fre$version.file
 
               dl.status <- gdfpd.download.file(dl.link = dl.link,
                                                dest.file = temp.file,
@@ -401,33 +407,35 @@ gdfpd.GetDFPData <- function(name.companies,
 
         idx <- (df.to.process$name.company == i.company)&
           (df.to.process$type.fin.report == 'fca')&
-          (format(df.to.process$id.date, '%Y') == format(temp.df2$id.date, '%Y'))
+          (format(df.to.process$id.date, '%Y') == format(temp.df.dfp$id.date, '%Y'))
 
-        temp.df.fre <- df.to.process[idx,  ]
+        temp.df.fca <- df.to.process[idx,  ]
 
-        if (nrow(temp.df.fre) == 0) {
+        if (nrow(temp.df.fca ) == 0) {
           cat(' | No FCA file available..')
           l.out.FCA.temp <- list()
         } else {
 
-          temp.file = file.path(folder.out, paste0('FCA_', stringr::str_sub(my.filename,1,4), '_',
-                                                   'idfile_', temp.df2$id.file, '_',
-                                                   'verfile_', temp.df2$version.file, '_',
+          temp.file = file.path(folder.out, paste0('FCA_',
                                                    stringr::str_sub(my.filename,1,4), '_',
-                                                   i.date, '.zip') )
+                                                   temp.df.fca$id.company, '_',
+                                                   i.date, '_',
+                                                   'idfile_', temp.df.fca$id.file, '_',
+                                                   'verfile_', temp.df.fca$version.file,
+                                                   '.zip') )
 
 
           dl.link <- temp.df.fre$dl.link
 
-
-
           # do cache
           f.cache <- file.path(my.cache.dir,
                                paste0('GetDFPData_FCA_cache_',
-                                      'idfile_', temp.df2$id.file, '_',
-                                      'verfile_', temp.df2$version.file, '_',
                                       stringr::str_sub(my.filename,1,4), '_',
-                                      i.date, '.rds'))
+                                      temp.df.fca$id.company, '_',
+                                      i.date, '_',
+                                      'idfile_', temp.df.fca$id.file, '_',
+                                      'verfile_', temp.df.fca$version.file,
+                                       '.rds'))
 
           if (file.exists(f.cache)) {
             cat(paste0(' | Found FCA cache file') )
@@ -464,9 +472,9 @@ gdfpd.GetDFPData <- function(name.companies,
 
       # fix all dfs
 
-      l.out.DFP.temp <- lapply(l.out.DFP.temp, my.fix.cols, name.company = i.company, ref.date = temp.df2$id.date)
-      l.out.FRE.temp <- lapply(l.out.FRE.temp, my.fix.cols, name.company = i.company, ref.date = temp.df2$id.date)
-      l.out.FCA.temp <- lapply(l.out.FCA.temp, my.fix.cols, name.company = i.company, ref.date = temp.df2$id.date)
+      l.out.DFP.temp <- lapply(l.out.DFP.temp, my.fix.cols, name.company = i.company, ref.date = temp.df.dfp$id.date)
+      l.out.FRE.temp <- lapply(l.out.FRE.temp, my.fix.cols, name.company = i.company, ref.date = temp.df.dfp$id.date, do.fre.register = TRUE)
+      l.out.FCA.temp <- lapply(l.out.FCA.temp, my.fix.cols, name.company = i.company, ref.date = temp.df.dfp$id.date)
 
       # save dataframes in final list objects
       l.out.DFP <- my.merge.dfs.lists(l.out.DFP, l.out.DFP.temp )
