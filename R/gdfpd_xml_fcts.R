@@ -45,6 +45,26 @@ xml.fct.compensation <- function(x) {
 
   x <- x$RemuneracaoReconhecidaOrgao$RemuneracaoReconhecidaOrgao
 
+  if (is.null(x)) {
+    return(data.frame(level.remuneration = NA,
+                      qtd.members = NA,
+                      qtd.remunerated.members = NA,
+                      total.value.remuneration = NA,
+                      fixed.salary = NA,
+                      fixed.benefits = NA,
+                      fixed.participations = NA,
+                      fixed.others = NA,
+                      variable.bonus = NA,
+                      variable.results.participation = NA,
+                      variable.meetings.participation = NA,
+                      variable.commissions.participation = NA,
+                      variable.others = NA,
+                      post.job.compensation = NA,
+                      ceasing.job.compensation = NA,
+                      stocks.options.benefits = NA,
+                      stringsAsFactors = FALSE))
+  }
+
   df.out <- data.frame(level.remuneration = switch(fix.fct(x$CodigoOrgaoAdministrador),
                                                    '0' = NA,
                                                    '1' = 'Management Council',
@@ -554,7 +574,7 @@ xml.fct.stocks.details <- function(x) {
                        tag.along = fix.fct(x$PercentualTagAlong, type.info = 'numeric'),
                        preferential.code = fix.fct(x$CodigoClasseAcaoPreferencial),
                        preferential.text = fix.fct(x$DescricaoClasseAcaoPreferencial),
-                       divident.text = fix.fct(x$TextoDireitoDividendo),
+                       dividend.text = fix.fct(x$TextoDireitoDividendo),
                        flag.voting.rights = fix.fct(x$IndicadorDireitoVoto),
                        flag.voting.text = fix.fct(x$DescricaoIndicadorDireitoVoto),
                        flag.conversibility = fix.fct(x$DescricaoIndicadorConversibilidade),
@@ -587,5 +607,3 @@ xml.fct.div.details <- function(x) {
   return(df.out)
 
 }
-
-xml.fct.div.details

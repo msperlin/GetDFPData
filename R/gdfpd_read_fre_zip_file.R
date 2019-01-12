@@ -49,7 +49,6 @@ gdfpd.read.fre.zip.file <- function(my.zip.file,
   my.files <- list.files(rnd.folder.name)
 
   if (length(my.files) == 0) {
-    #browser()
 
     file.remove(my.zip.file)
     stop(paste0('Zipped file contains 0 files. ',
@@ -332,7 +331,17 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
   xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
   xml_data <- xml_data[1]
 
-  df.dividends.details <- do.call(what = dplyr::bind_rows, lapply(xml_data, xml.fct.div.details ))
+  if (is.null(xml_data)) {
+    df.dividends.details <- data.frame(net.profit = NA,
+                                       distributed.dividend = NA,
+                                       retained.profit = NA,
+                                       payout = NA,
+                                       div.yeild.on.equity = NA,
+                                       stringsAsFactors = FALSE )
+  } else {
+    df.dividends.details <- do.call(what = dplyr::bind_rows, lapply(xml_data, xml.fct.div.details ))
+  }
+
   rownames(df.dividends.details) <- NULL
 
   # save output
