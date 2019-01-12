@@ -1,7 +1,8 @@
 ## Version 1.4 (2018-12-21)
 
 - Naming conventions for caching system are improved so that it reflects different versions of FRE and DFP files. 
-- Fixed issue with dates in FRE. A new column "year.fre" is added to all FRE data. This makes sure where the FRE datasets are coming from. The "ref.date" column is set as (year.fre -1)-12-31.
+- Fixed issue with dates in FRE. A new column "year.fre" is added to all FRE data. This makes sure where the FRE datasets are coming from. The "ref.date" column should be used to bind datasets from DFP and FRE. It is set as (year.fre -1)-12-31.
+- Many other improvements
 
 ## Version 1.3 (2018-11-26)
 
