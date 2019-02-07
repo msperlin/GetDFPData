@@ -178,14 +178,27 @@ gdfpd.download.file <- function(dl.link, dest.file, max.dl.tries) {
       #                      quiet = T,
       #                      mode = 'wb')
 
-      # new code
-      dl.link <- stringr::str_replace(dl.link, stringr::fixed('https'), 'http' )
-      utils::download.file(url = dl.link,
-                           destfile = dest.file,
-                           method = 'wget',
-                           extra = '--no-check-certificate',
-                           quiet = T,
-                           mode = 'wb')
+      # fix for issue 13: https://github.com/msperlin/GetDFPData/issues/13
+      my.OS <- tolower(Sys.info()["sysname"])
+      if (my.OS == 'windows') {
+        utils::download.file(url = dl.link,
+                             destfile = dest.file,
+                             #method = 'wget',
+                             #extra = '--no-check-certificate',
+                             quiet = T,
+                             mode = 'wb')
+      } else {
+        # new code (only works in linux)
+        dl.link <- stringr::str_replace(dl.link, stringr::fixed('https'), 'http' )
+        utils::download.file(url = dl.link,
+                             destfile = dest.file,
+                             method = 'wget',
+                             extra = '--no-check-certificate',
+                             quiet = T,
+                             mode = 'wb')
+      }
+
+
 
     })
 
