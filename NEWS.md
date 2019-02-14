@@ -1,3 +1,7 @@
+## Version 1.5 (2019-02-14)
+
+- Fixed bug for windows download function
+
 ## Version 1.4 (2018-01-12)
 
 - Naming conventions for caching system are improved so that it reflects different versions of FRE and DFP files. 
