@@ -1,3 +1,7 @@
+## Version 1.5.1 (2019-02-14)
+
+- Fixed bug for repeated dates (see [github issue](https://github.com/msperlin/GetDFPData/issues/19) )
+
 ## Version 1.5 (2019-02-14)
 
 - Fixed bug for windows download function

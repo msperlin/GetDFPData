@@ -62,7 +62,6 @@ gdfpd.GetDFPData <- function(name.companies,
   }
 
   # check do.cache
-
   if (class(do.cache) != 'logical') {
     stop('Input do.cache should be logical (TRUE or FALSE)')
   }
@@ -251,7 +250,7 @@ gdfpd.GetDFPData <- function(name.companies,
     l.out.DFP <- list()
     l.out.FRE <- list()
     l.out.FCA <- list()
-    for (i.date in as.character(company.df$id.date) ) {
+    for (i.date in as.character(unique(company.df$id.date) ) ) {
 
       cat(paste0('\n\tProcessing ', my.id, ' - ', i.company, ' | date ', i.date  ) )
 
