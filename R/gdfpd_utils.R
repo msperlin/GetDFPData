@@ -104,7 +104,23 @@ gdfpd.search.company <- function(char.to.search, cache.folder = 'DFP Cache Folde
 gdfpd.read.fwf.file <- function(my.f, flag.thousands) {
 
   if (length(my.f) == 0) {
-    stop('Error: my.f is of length 0')
+    warning('Warning: my.f is of length 0')
+
+    df.out <- data.frame(acc.number= NA,
+                         acc.desc = NA,
+                         acc.value = NA)
+    return(df.out)
+
+  }
+
+  if (is.na(my.f)) {
+
+    warning('Warning:  my.f is NA!')
+
+    df.out <- data.frame(acc.number= NA,
+                         acc.desc = NA,
+                         acc.value = NA)
+    return(df.out)
   }
 
   if (file.size(my.f) ==0 ) {

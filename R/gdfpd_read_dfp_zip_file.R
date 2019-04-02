@@ -97,7 +97,6 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
   company.reg.file <- file.path(rnd.folder.name,'FormularioDemonstracaoFinanceiraDFP.xml')
   xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
 
-
   # get basic info
   company.name = xml_data$CompanhiaAberta$NomeRazaoSocialCompanhiaAberta
   company.cvm_code <- xml_data$CompanhiaAberta$CodigoCvm
@@ -135,9 +134,9 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
       if (info == 'Descricao') return(x$DescricaoConta1)
       if (info == 'Valor') {
 
-
         my.value <- as.numeric(c(x$ValorConta1, x$ValorConta2, x$ValorConta3,x$ValorConta4))
-        my.value <- my.value[my.value != 0]
+        #my.value <- my.value[my.value != 0]
+
         if (length(my.value)==0) {
           my.value <- 0
         } else {
@@ -171,7 +170,6 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
   df.income    <- stats::na.omit(ind.df[stringr::str_sub(ind.df$acc.number,1,1) == '3', ])
   df.cashflow    <- stats::na.omit(ind.df[stringr::str_sub(ind.df$acc.number,1,1) == '6', ])
   df.value <- stats::na.omit(ind.df[stringr::str_sub(ind.df$acc.number,1,1) == '7', ])
-
 
   l.individual.dfs <- list(df.assets = df.assets,
                            df.liabilities = df.liabilities,
@@ -299,10 +297,9 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
   my.f <- list.files(rnd.folder.name, 'DFPDVAE', full.names = T)[1]
   df.value <- gdfpd.read.fwf.file(my.f, flag.thousands)
 
-
   my.f <- list.files(rnd.folder.name, 'DFPDFCE', full.names = T)
 
-  if (length(my.f) == 0) {
+  if ( (length(my.f) == 0) ) {
     df.cashflow <- data.frame(acc.desc  = NA,
                               acc.value = NA,
                               acc.number = NA)

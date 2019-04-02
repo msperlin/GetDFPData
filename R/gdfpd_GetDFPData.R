@@ -247,6 +247,10 @@ gdfpd.GetDFPData <- function(name.companies,
     # fix l.out.bov
     l.out.bov <- lapply(l.out.bov, my.fix.cols, name.company = i.company, ref.date = 'Current')
 
+    # fix file names for latin characters
+    my.filename <- iconv(company.df$name.company, to = 'ASCII//TRANSLIT')[1]
+    my.filename <- stringr::str_replace_all(my.filename, stringr::fixed('?'), '_')
+
     l.out.DFP <- list()
     l.out.FRE <- list()
     l.out.FCA <- list()
@@ -274,9 +278,7 @@ gdfpd.GetDFPData <- function(name.companies,
         # get dfp data
         dl.link <- temp.df.dfp$dl.link
 
-        # fix file names for latin characters
-        my.filename <- iconv(temp.df.dfp$name.company, to = 'ASCII//TRANSLIT')
-        my.filename <- stringr::str_replace_all(my.filename, stringr::fixed('?'), '_')
+
 
         temp.file = file.path(folder.out, paste0('DFP_',
                                                  stringr::str_sub(my.filename,1,4), '_',
@@ -289,6 +291,7 @@ gdfpd.GetDFPData <- function(name.companies,
         if (nrow(temp.df.dfp) == 0) {
           cat(' | No DFP file available..')
           l.out.DFP.temp <- list()
+          version.dfp.file <- NA
         } else {
 
           # do cache
@@ -333,6 +336,7 @@ gdfpd.GetDFPData <- function(name.companies,
         }
       } else {
         l.out.DFP.temp <- list()
+        version.dfp.file <- NA
       }
 
       # get data from FRE
@@ -346,6 +350,7 @@ gdfpd.GetDFPData <- function(name.companies,
         if (nrow(temp.df.fre) == 0) {
           cat(' | No FRE file available..')
           l.out.FRE.temp <- list()
+          version.fre.file <- NA
         } else {
 
           temp.file = file.path(folder.out, paste0('FRE_',

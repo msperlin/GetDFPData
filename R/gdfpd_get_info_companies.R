@@ -17,7 +17,8 @@
 #' df.info <- gdfpd.get.info.companies()
 #' str(df.info)
 #' }
-gdfpd.get.info.companies <- function(type.data = 'companies_files', cache.folder = 'DFP Cache Folder') {
+gdfpd.get.info.companies <- function(type.data = 'companies_files',
+                                     cache.folder = 'DFP Cache Folder') {
 
   # error checking
   possible.values <- c('companies_files', 'companies')
@@ -58,11 +59,14 @@ gdfpd.get.info.companies <- function(type.data = 'companies_files', cache.folder
     situation = readr::col_character()
   )
 
-
   df.info <- readr::read_csv(link.github, col_types = my.cols)
 
   # remove rows without id for dates or situation
   idx <- (!is.na(df.info$id.date))&(!is.na(df.info$situation))
+  df.info <- df.info[idx, ]
+
+  # remove rows for files
+  idx <- lubridate::month(df.info$id.date) == 12
   df.info <- df.info[idx, ]
 
   # filter blacklist of files. These are zipped files with 0 content. Probably error from B3
