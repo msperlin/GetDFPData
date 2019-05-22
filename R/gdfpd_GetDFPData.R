@@ -416,9 +416,14 @@ gdfpd.GetDFPData <- function(name.companies,
 
         cat(paste0('\n\t\tAcessing FCA data') )
 
-        idx <- (df.to.process$name.company == i.company)&
-          (df.to.process$type.fin.report == 'fca')&
-          (format(df.to.process$id.date, '%Y') == format(temp.df.dfp$id.date, '%Y'))
+        idx <- (company.df$id.date == i.date)&(company.df$type.fin.report == 'fca')
+
+
+        # idx <- (df.to.process$name.company == i.company)&
+        #   (df.to.process$type.fin.report == 'fca')&
+        #   (format(df.to.process$id.date, '%Y') == format(temp.df.dfp$id.date, '%Y'))
+
+        idx <- (company.df$id.date == i.date)&(company.df$type.fin.report == 'fca')
 
         temp.df.fca <- df.to.process[idx,  ]
 
@@ -576,7 +581,8 @@ gdfpd.GetDFPData <- function(name.companies,
                                      history.auditing = list(l.out.FRE$df.auditing),
                                      history.responsible.docs = list(l.out.FRE$df.responsible.docs),
                                      history.stocks.details = list(l.out.FRE$df.stocks.details),
-                                     history.dividends.details = list(l.out.FRE$df.dividends.details) )
+                                     history.dividends.details = list(l.out.FRE$df.dividends.details),
+                                     history.intangible = list(l.out.FRE$df.intangible.details))
 
     # bind for final df
     suppressWarnings({

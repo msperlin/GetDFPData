@@ -607,3 +607,25 @@ xml.fct.div.details <- function(x) {
   return(df.out)
 
 }
+
+#' Reads XML data for patents details
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.intangible.details <- function(x) {
+
+  df.out <- data.frame(id = fix.fct(x$Id, type.info = 'numeric'),
+                       id.type = fix.fct(x$CodigoTipo, 'numeric'),
+                       patent.desc = fix.fct(x$Ativo, 'character'),
+                       duration = as.Date(x$Duracao, '%d/%m/%Y'),
+                       stringsAsFactors = FALSE )
+
+  return(df.out)
+
+}

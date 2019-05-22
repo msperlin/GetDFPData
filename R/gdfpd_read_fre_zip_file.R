@@ -344,6 +344,16 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
 
   rownames(df.dividends.details) <- NULL
 
+  # get: intangible/patents  (table 9.1.b)
+  company.reg.file <- file.path(rnd.folder.name,
+                                'PatentesMarcasFranquias.xml')
+
+  xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file,
+                                           encoding = 'UTF-8'))
+  df.intangible.details <- do.call(what = dplyr::bind_rows,
+                                lapply(xml_data, xml.fct.intangible.details ))
+  rownames(df.intangible.details) <- NULL
+
   # save output
 
   my.l <- list(df.stockholders = df.stockholders,
@@ -365,7 +375,8 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
                df.auditing = df.auditing,
                df.responsible.docs = df.responsible.docs,
                df.stocks.details = df.stocks.details,
-               df.dividends.details  = df.dividends.details)
+               df.dividends.details  = df.dividends.details,
+               df.intangible.details = df.intangible.details)
 
   return(my.l)
 }
