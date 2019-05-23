@@ -9,7 +9,7 @@
 #'
 #' x <- NULL
 #' x2 <- fix.fct(x)
-fix.fct <- function(x, type.info = 'character') {
+fix.fct <- function(x, type.info = 'character', format.date = '%Y-%m-%d') {
   if (is.null(x)) return(NA)
 
   if (!(type.info %in% c('character', 'date', 'numeric'))) {
@@ -17,7 +17,12 @@ fix.fct <- function(x, type.info = 'character') {
   }
 
   if (type.info == 'date') {
-    x <- as.Date(x)
+    if (nchar(x) > 10) return(as.Date(NA))
+
+    x <- as.Date(x, format.date)
+
+    if (is.na(x)) return(x)
+
     if ( x == '1-01-01') {
       x <- as.Date(NA)
     }
@@ -623,7 +628,7 @@ xml.fct.intangible.details <- function(x) {
   df.out <- data.frame(id = fix.fct(x$Id, type.info = 'numeric'),
                        id.type = fix.fct(x$CodigoTipo, 'numeric'),
                        patent.desc = fix.fct(x$Ativo, 'character'),
-                       duration = as.Date(x$Duracao, '%d/%m/%Y'),
+                       duration = fix.fct(x$Duracao, 'date', '%d/%m/%Y'),
                        stringsAsFactors = FALSE )
 
   return(df.out)

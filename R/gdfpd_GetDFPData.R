@@ -425,7 +425,7 @@ gdfpd.GetDFPData <- function(name.companies,
 
         idx <- (company.df$id.date == i.date)&(company.df$type.fin.report == 'fca')
 
-        temp.df.fca <- df.to.process[idx,  ]
+        temp.df.fca <- company.df[idx,  ]
 
         if (nrow(temp.df.fca ) == 0) {
           cat(' | No FCA file available..')
@@ -452,6 +452,7 @@ gdfpd.GetDFPData <- function(name.companies,
                                       'idfile_', temp.df.fca$id.file, '_',
                                       'verfile_', temp.df.fca$version.file,
                                       '.rds'))
+
 
           if (file.exists(f.cache)) {
             cat(paste0(' | Found FCA cache file') )
