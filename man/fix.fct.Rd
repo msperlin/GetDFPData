@@ -4,12 +4,14 @@
 \alias{fix.fct}
 \title{Fix NULL values in dataframe}
 \usage{
-fix.fct(x, type.info = "character")
+fix.fct(x, type.info = "character", format.date = "\%Y-\%m-\%d")
 }
 \arguments{
 \item{x}{Am object, possibly NULL}
 
 \item{type.info}{Type of object}
+
+\item{format.date}{Format of data, as string}
 }
 \value{
 A single object

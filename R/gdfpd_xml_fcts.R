@@ -2,6 +2,8 @@
 #'
 #' @param x Am object, possibly NULL
 #' @param type.info Type of object
+#' @param format.date Format of data, as string
+#'
 #' @return A single object
 #' @export
 #'
