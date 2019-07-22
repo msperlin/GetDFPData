@@ -1,4 +1,4 @@
-## Version 1.5.2 (2019-07-16)
+## Version 1.5.2 (2019-07-22)
 
 - Added intangibles table from FRE (table 9.1.b)
 - fixed minor CHECK bug in fix.fct
