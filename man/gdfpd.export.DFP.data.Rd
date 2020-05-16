@@ -4,9 +4,11 @@
 \alias{gdfpd.export.DFP.data}
 \title{Export tibble to an excel or csv (zipped) file}
 \usage{
-gdfpd.export.DFP.data(df.reports,
+gdfpd.export.DFP.data(
+  df.reports,
   base.file.name = paste0("GetDFPData_Export_", Sys.Date()),
-  type.export = "xlsx")
+  type.export = "xlsx"
+)
 }
 \arguments{
 \item{df.reports}{Tibble with financial information (output of gdfpd.GetDFPData)}

@@ -4,8 +4,7 @@
 \alias{gdfpd.fix.DFP.dataframes}
 \title{Fix dataframe for version issues and inflation measures (internal)}
 \usage{
-gdfpd.fix.DFP.dataframes(df.in, inflation.index, df.inflation,
-  max.levels = 3)
+gdfpd.fix.DFP.dataframes(df.in, inflation.index, df.inflation, max.levels = 3)
 }
 \arguments{
 \item{df.in}{A dataframe with financial statements}

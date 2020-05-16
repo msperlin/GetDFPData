@@ -277,9 +277,8 @@ gdfpd.GetDFPData <- function(name.companies,
 
         # get dfp data
         dl.link <- temp.df.dfp$dl.link
-
-
-
+        
+        
         temp.file = file.path(folder.out, paste0('DFP_',
                                                  stringr::str_sub(my.filename,1,4), '_',
                                                  temp.df.dfp$id.company, '_',
@@ -314,6 +313,7 @@ gdfpd.GetDFPData <- function(name.companies,
               cat(' | file exists (no dl)')
             } else {
               cat(' | downloading file')
+              
               dl.status <- gdfpd.download.file(dl.link = dl.link,
                                                dest.file = temp.file,
                                                max.dl.tries = max.dl.tries)

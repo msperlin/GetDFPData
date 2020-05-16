@@ -4,8 +4,13 @@
 \alias{my.copy.fct}
 \title{Copies data to external file}
 \usage{
-my.copy.fct(df.in, name.df, base.file.name, type.export = "xlsx",
-  csv.dir = tempdir())
+my.copy.fct(
+  df.in,
+  name.df,
+  base.file.name,
+  type.export = "xlsx",
+  csv.dir = tempdir()
+)
 }
 \arguments{
 \item{df.in}{Dataframe to be copied}

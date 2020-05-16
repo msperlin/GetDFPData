@@ -92,8 +92,6 @@ gdfpd.search.company <- function(char.to.search, cache.folder = 'DFP Cache Folde
 #'
 #' @param my.f File to be read
 #' @param flag.thousands A flag for thousands values
-#' @inheritParams gdfpd.GetDFPData
-#' @inheritParams gdfpd.read.zip.file
 #' @return A dataframe with data
 #' @export
 #' @examples
@@ -205,11 +203,14 @@ gdfpd.download.file <- function(dl.link, dest.file, max.dl.tries) {
                              mode = 'wb')
       } else {
         # new code (only works in linux)
+
         dl.link <- stringr::str_replace(dl.link, stringr::fixed('https'), 'http' )
+        dl.link <- stringr::str_replace(dl.link, stringr::fixed('http'), 'https' )
+
         utils::download.file(url = dl.link,
                              destfile = dest.file,
                              method = 'wget',
-                             extra = '--no-check-certificate',
+                             extra = "--ciphers 'DEFAULT:!DH' --no-check-certificate",
                              quiet = T,
                              mode = 'wb')
       }

@@ -1,3 +1,7 @@
+## Version 1.5.3 (2020-05-16)
+
+- Fixed [issue](https://github.com/msperlin/GetDFPData/issues/33) with CVM certificates
+
 ## Version 1.5.2 (2019-07-22)
 
 - Added intangibles table from FRE (table 9.1.b)

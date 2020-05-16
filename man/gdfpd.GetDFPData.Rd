@@ -4,11 +4,19 @@
 \alias{gdfpd.GetDFPData}
 \title{Downloads and reads financial reports from B3's DFP/FRE/FCA system}
 \usage{
-gdfpd.GetDFPData(name.companies, first.date = Sys.Date() - 12 * 30,
-  last.date = Sys.Date(), selected.data = "DFP|FRE|FCA",
-  inflation.index = "dollar", max.levels = 3, folder.out = tempdir(),
-  do.cache = TRUE, cache.folder = "DFP Cache Folder",
-  fetch.new.files = FALSE, max.dl.tries = 10)
+gdfpd.GetDFPData(
+  name.companies,
+  first.date = Sys.Date() - 12 * 30,
+  last.date = Sys.Date(),
+  selected.data = "DFP|FRE|FCA",
+  inflation.index = "dollar",
+  max.levels = 3,
+  folder.out = tempdir(),
+  do.cache = TRUE,
+  cache.folder = "DFP Cache Folder",
+  fetch.new.files = FALSE,
+  max.dl.tries = 10
+)
 }
 \arguments{
 \item{name.companies}{Official names of companies to get financial reports (e.g. 'ELETROPAULO METROPOLITANA EL.S.PAULO S.A').

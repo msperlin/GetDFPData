@@ -4,8 +4,10 @@
 \alias{gdfpd.get.info.companies}
 \title{Reads up to date information about Bovespa companies from a github file}
 \usage{
-gdfpd.get.info.companies(type.data = "companies_files",
-  cache.folder = "DFP Cache Folder")
+gdfpd.get.info.companies(
+  type.data = "companies_files",
+  cache.folder = "DFP Cache Folder"
+)
 }
 \arguments{
 \item{type.data}{A string that sets the type of information to be returned ('companies' or 'companies_files').
