@@ -204,13 +204,14 @@ gdfpd.download.file <- function(dl.link, dest.file, max.dl.tries) {
       } else {
         # new code (only works in linux)
 
-        dl.link <- stringr::str_replace(dl.link, stringr::fixed('https'), 'http' )
-        dl.link <- stringr::str_replace(dl.link, stringr::fixed('http'), 'https' )
+        # change https to https (or vice versa)? (leave it for future reference)
+        #dl.link <- stringr::str_replace(dl.link, stringr::fixed('https'), 'http' )
+        #dl.link <- stringr::str_replace(dl.link, stringr::fixed('http'), 'https' )
 
         utils::download.file(url = dl.link,
                              destfile = dest.file,
                              method = 'wget',
-                             extra = "--ciphers 'DEFAULT:!DH' --no-check-certificate",
+                             extra = "--ciphers 'DEFAULT:!DH' --no-check-certificate", # use unsecure dl
                              quiet = T,
                              mode = 'wb')
       }
