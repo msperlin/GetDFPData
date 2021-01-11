@@ -1,8 +1,8 @@
 # DEPRECATED (as of 2020-07-01)
 
-Back in 2020 I decided to split the GetDFPData package between [GetDFPData2](https://github.com/msperlin/GetDFPData2) and [GetFREData](https://github.com/msperlin/GetFREData). The current code will stay in Github but will not be maintained any longer. Be aware that GetDFPData is **no longer available in CRAN**. The future development will be concentrated in both new packages, which will be submitted to CRAN soon.
+Back in 2020 I decided to split the GetDFPData package between [GetDFPData2](https://github.com/msperlin/GetDFPData2) and [GetFREData](https://github.com/msperlin/GetFREData). The current code will stay in Github but will not be maintained. 
 
-Read this [blog post](https://www.msperlin.com/blog/post/2020-07-18-new_packages-getfredata-getdfpdata2/) for the reasons behind my decision.
+Be aware that GetDFPData is **no longer available in CRAN**. Future development will be concentrated in both new packages. Read this [blog post](https://www.msperlin.com/blog/post/2020-07-18-new_packages-getfredata-getdfpdata2/) for the reasons behind my decision.
 
 
 # Reading Annual Financial Reports from Bovespa's DFP, FRE and FCA systems
