@@ -320,3 +320,21 @@ my.merge.dfs.lists <- function(l.1, l.2) {
   return(l.out)
 
 }
+
+
+.onAttach <- function(libname,pkgname) {
+
+  do_color <- crayon::make_style("#FF4141")
+
+  if (interactive()) {
+    msg <- do_color(paste0('Package GetDFPData is deprecated as of 2020-07-01. ',
+                  'The evolution of GetDFPData is GetDFPData2 and you should switch to it as soon as possible. ',
+                  '\n\nMore details about this change are available in my blog post:',
+                  '\n\n<https://www.msperlin.com/blog/post/2020-07-18-new_packages-getfredata-getdfpdata2/>'))
+  } else {
+    msg <- ''
+  }
+
+  packageStartupMessage(msg)
+
+}
