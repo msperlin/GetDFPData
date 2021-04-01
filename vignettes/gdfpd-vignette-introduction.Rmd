@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
   
-Financial statements of companies traded at B3 (formerly Bovespa), the Brazilian stock exchange, are available in its [website](http://www.bmfbovespa.com.br/). Accessing the data for a single company is straightforward. In the website one can find a simple interface for accessing this dataset. An example is given [here](https://www.rad.cvm.gov.br/ENETCONSULTA/frmGerenciaPaginaFRE.aspx?NumeroSequencialDocumento=67775&CodigoTipoInstituicao=2). However, gathering and organizing the data for a large scale research, with many companies and many dates, is painful. Financial reports must be downloaded or copied individually and later aggregated. Changes in the accounting format thoughout time can make this process slow, unreliable and irreproducible.
+Financial statements of companies traded at B3 (formerly Bovespa), the Brazilian stock exchange, are available in its [website](http://www.b3.com.br/). Accessing the data for a single company is straightforward. In the website one can find a simple interface for accessing this dataset. However, gathering and organizing the data for a large scale research, with many companies and many dates, is painful. Financial reports must be downloaded or copied individually and later aggregated. Changes in the accounting format thoughout time can make this process slow, unreliable and irreproducible.
 
 Package `GetDFPData` provides a R interface to all annual financial statements available in the website and more. It not only downloads the data but also organizes it in a tabular format and allows the use of inflation indexes. Users can select companies and a time period to download all available data. Several information about current companies, such as sector and available quarters are also at reach. The main purpose of the package is to make it easy to access financial statements in large scale research, facilitating the reproducibility of corporate finance studies with B3 data.
 
@@ -22,7 +22,7 @@ The positive aspects of `GetDFDData` are:
 - A cache system is employed for fast data acquisition
 - Completely free and open source!
 
-A white paper about the package is available at [SSRN](https://ssrn.com/abstract=3128252).
+A white paper about the package is available at [SSRN](https://www.ssrn.com/abstract=3128252).
 
 # Installation
   
@@ -38,7 +38,7 @@ devtools::install_github('msperlin/GetDFPData')
 
 # Shinny interface
 
-The web interface of `GetDFPData` is available at [http://www.msperlin.com/shiny/GetDFPData/](http://www.msperlin.com/shiny/GetDFPData/).
+The web interface of `GetDFPData` is available at [https://www.msperlin.com/shiny/GetDFPData/](https://www.msperlin.com/shiny/GetDFPData/).
 
 
 # How to use `GetDFPData`
@@ -55,7 +55,7 @@ gdfpd.search.company('petrobras', cache.folder = tempdir())
 
 Its official name in Bovespa records is `PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS`. Data for quarterly and annual statements are available from 1998 to 2017. The situation of the company, active or canceled, is also given. This helps verifying the availability of data.
 
-The content of all available financial statements can be accessed with function `gdfpd.get.info.companies`. It will read and parse a .csv file from my [github repository](https://github.com/msperlin/GetDFPData_auxiliary). This will be periodically updated for new information. Let's try it out:
+The content of all available financial statements can be accessed with function `gdfpd.get.info.companies`. It will read and parse a .csv file from my [github repository](https://github.com/msperlin/GetITRData_auxiliary). This will be periodically updated for new information. Let's try it out:
 
 ```{r, eval=FALSE}
 df.info <- gdfpd.get.info.companies(type.data = 'companies', cache.folder = tempdir())
